@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pulstar.Data\Pulstar.Data.csproj" />
-    <ProjectReference Include="..\Pulstar.Models\Pulstar.Models.csproj" />
   </ItemGroup>
 
 </Project>

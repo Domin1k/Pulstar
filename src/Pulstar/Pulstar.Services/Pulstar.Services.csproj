@@ -19,5 +19,11 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Pulstar.Data\Pulstar.Data.csproj" />
+    <ProjectReference Include="..\Pulstar.Models\Pulstar.Models.csproj" />
+    <ProjectReference Include="..\Pulstar.Services.Interfaces\Pulstar.Services.Interfaces.csproj" />
+  </ItemGroup>
 
 </Project>

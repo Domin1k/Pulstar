@@ -1,4 +1,4 @@
-﻿namespace Pulstar.Models
+﻿namespace Pulstar.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

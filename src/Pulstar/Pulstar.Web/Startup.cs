@@ -8,7 +8,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Pulstar.Data;
-    using Pulstar.Models;
+    using Pulstar.Data.Models;
     using Pulstar.Web.Services;
 
     public class Startup

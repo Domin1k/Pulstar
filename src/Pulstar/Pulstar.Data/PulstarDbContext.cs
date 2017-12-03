@@ -2,7 +2,7 @@
 {
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
-    using Pulstar.Models;
+    using Models;
 
     public class PulstarDbContext : IdentityDbContext<User>
     {

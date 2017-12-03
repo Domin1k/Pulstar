@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Pulstar.Data;
-using Pulstar.Models;
+using Pulstar.Data.Models;
 using System;
 
 namespace Pulstar.Data.Migrations

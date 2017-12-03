@@ -10,7 +10,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Pulstar.Models;
+    using Pulstar.Data.Models;
     using Pulstar.Web.Models.ManageViewModels;
     using Pulstar.Web.Services;
 

@@ -8,7 +8,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Pulstar.Models;
+    using Pulstar.Data.Models;
     using Pulstar.Web.Models.AccountViewModels;
     using Pulstar.Web.Services;
 
