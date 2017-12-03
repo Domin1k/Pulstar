@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Pulstar.Data\Pulstar.Data.csproj" />
     <ProjectReference Include="..\Pulstar.Models\Pulstar.Models.csproj" />
   </ItemGroup>

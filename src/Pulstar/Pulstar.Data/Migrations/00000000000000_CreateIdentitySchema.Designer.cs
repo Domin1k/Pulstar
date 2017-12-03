@@ -9,7 +9,7 @@
     using Microsoft.EntityFrameworkCore.Metadata;
     using Microsoft.EntityFrameworkCore.Migrations;
 
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(PulstarDbContext))]
     [Migration("00000000000000_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
