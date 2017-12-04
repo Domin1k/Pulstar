@@ -32,6 +32,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pulstar.Data\Pulstar.Data.csproj" />
+    <ProjectReference Include="..\Pulstar.Services.Interfaces\Pulstar.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\Pulstar.Services\Pulstar.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\ProductsViewModels\" />
   </ItemGroup>
 
 </Project>

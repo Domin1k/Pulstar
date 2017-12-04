@@ -28,12 +28,7 @@
                 </button>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Pulstar</a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                </ul>
-                @await Html.PartialAsync("_LoginPartial")
-            </div>
+            @(await Component.InvokeAsync("Menu"))
         </div>
     </nav>
     <div class="container body-content">

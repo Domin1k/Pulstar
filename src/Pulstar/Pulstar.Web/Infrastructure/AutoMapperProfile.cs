@@ -1,4 +1,4 @@
-﻿namespace Pulstar.Common
+﻿namespace Pulstar.Web.Infrastructure
 {
     using AutoMapper;
     using System;
@@ -12,7 +12,7 @@
             var allTypes = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
-                .Where(a => a.GetName().Name.Contains("AreasDemo"))
+                .Where(a => a.GetName().Name.Contains("Pulstar"))
                 .SelectMany(a => a.GetTypes());
 
             allTypes

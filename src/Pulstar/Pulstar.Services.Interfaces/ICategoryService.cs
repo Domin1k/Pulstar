@@ -6,6 +6,6 @@
 
     public interface ICategoryService
     {
-        Task<IEnumerable<CategoryListingServiceModel>> All();
+        Task<IEnumerable<CategoryListingServiceModel>> All(string type);
     }
 }

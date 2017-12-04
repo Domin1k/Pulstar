@@ -1,6 +1,6 @@
-﻿namespace Pulstar.Data.Models
+﻿namespace Pulstar.Common.Enums
 {
-    public enum ProductType : short
+    public enum CategoryType : short
     {
         Game = 1,
         Accessory = 2,

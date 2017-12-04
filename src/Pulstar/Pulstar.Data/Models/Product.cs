@@ -1,6 +1,7 @@
 ﻿namespace Pulstar.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using Pulstar.Common.Enums;
 
     public class Product : BaseEntity<int>
     {
@@ -25,9 +26,7 @@
 
         [Range(0, int.MaxValue)]
         public int Quantity { get; set; }
-
-        public ProductType Type { get; set; }
-
+        
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }
