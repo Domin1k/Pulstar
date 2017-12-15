@@ -12,9 +12,10 @@ using System;
 namespace Pulstar.Data.Migrations
 {
     [DbContext(typeof(PulstarDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171209104200_AddedUserColumns")]
+    partial class AddedUserColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,41 +151,6 @@ namespace Pulstar.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Pulstar.Data.Models.CreditCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CVV")
-                        .IsRequired()
-                        .HasMaxLength(4);
-
-                    b.Property<short>("CardType");
-
-                    b.Property<string>("CreditCardNumber")
-                        .IsRequired()
-                        .HasMaxLength(19);
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<DateTime>("ExpirationDate");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired();
-
-                    b.Property<DateTime?>("UpdatedOn");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("CreditCards");
-                });
-
             modelBuilder.Entity("Pulstar.Data.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -196,8 +162,6 @@ namespace Pulstar.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired();
-
-                    b.Property<double>("Discount");
 
                     b.Property<bool>("IsDeleted");
 
@@ -363,14 +327,6 @@ namespace Pulstar.Data.Migrations
                     b.HasOne("Pulstar.Data.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Pulstar.Data.Models.CreditCard", b =>
-                {
-                    b.HasOne("Pulstar.Data.Models.User", "Owner")
-                        .WithMany("CreditCards")
-                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

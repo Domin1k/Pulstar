@@ -12,9 +12,10 @@ using System;
 namespace Pulstar.Data.Migrations
 {
     [DbContext(typeof(PulstarDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171209191137_CreditCardTable")]
+    partial class CreditCardTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,8 +160,6 @@ namespace Pulstar.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(4);
 
-                    b.Property<short>("CardType");
-
                     b.Property<string>("CreditCardNumber")
                         .IsRequired()
                         .HasMaxLength(19);
@@ -168,8 +167,6 @@ namespace Pulstar.Data.Migrations
                     b.Property<DateTime?>("DeletedOn");
 
                     b.Property<DateTime>("ExpirationDate");
-
-                    b.Property<bool>("IsActive");
 
                     b.Property<bool>("IsDeleted");
 
@@ -182,7 +179,7 @@ namespace Pulstar.Data.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("CreditCards");
+                    b.ToTable("CreditCard");
                 });
 
             modelBuilder.Entity("Pulstar.Data.Models.Product", b =>
@@ -196,8 +193,6 @@ namespace Pulstar.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired();
-
-                    b.Property<double>("Discount");
 
                     b.Property<bool>("IsDeleted");
 

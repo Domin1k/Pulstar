@@ -10,6 +10,8 @@
             </div>
             <div class="col-md-6 pull-right">
                 <div><strong>Price </strong>@Model.Price EUR</div>
+                <div><strong>Discount </strong>@(Model.Discount > 0 ? $"{Model.Discount} %" : "None") </div>
+                <div><strong>End Price </strong>@Model.PriceAfterDiscount EUR</div>
                 <div>@Model.Description</div>
                 <div>
                     <a asp-area="" asp-controller="Users" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-success">Add To Cart</a>

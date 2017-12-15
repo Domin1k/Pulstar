@@ -11,10 +11,11 @@
     using Pulstar.Services.Interfaces;
     using Pulstar.Web.Areas.Admin.Models.Users;
     using Pulstar.Web.Infrastructure.Constants;
+    using Pulstar.Web.Infrastructure.Extensions;
     using Pulstar.Web.Models.ProductsViewModels;
 
     [Area(WebContants.AdminArea)]
-    [Authorize(Roles = AppConstants.Administrator)]
+    [Authorize(Roles = AppConstants.Administrator + "," + AppConstants.Manager)]
     public class AdminsController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -26,6 +27,7 @@
             _userService = userService;
         }
 
+        [Authorize(Roles = AppConstants.Administrator)]
         public async Task<IActionResult> Index()
         {
             var roles = await _roleManager.Roles.Select(r => new SelectListItem { Text = r.Name, Value = r.Name }).ToListAsync();
@@ -48,10 +50,25 @@
             {
                 return View(input);
             }
-
+            
+            // TODO
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddDiscount(int productId, double discount)
+        {
+            if (productId <= 0 || (discount <= 0 || discount >= 100))
+            {
+                TempData.AddErrorMessage("Discount must be in range [1..99] and product must be existing.");
+                return Ok();
+            }
+
+            // TODO
+            return View();
+        }
+
+        [Authorize(Roles = AppConstants.Administrator)]
         public async Task<IActionResult> Manage(string userName, string role)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(role))
