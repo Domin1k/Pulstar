@@ -32,6 +32,14 @@
         </div>
     </nav>
     <div class="container body-content">
+        @if (TempData.ContainsKey(TempDataExtensions.TempDataErrorKey))
+        {
+            <div class="alert alert-danger">@TempData[TempDataExtensions.TempDataErrorKey]</div>
+        }
+        @if (TempData.ContainsKey(TempDataExtensions.TempDataSuccess))
+        {
+            <div class="alert alert-success">@TempData[TempDataExtensions.TempDataSuccess]</div>
+        }
         @RenderBody()
         <hr />
         <footer>

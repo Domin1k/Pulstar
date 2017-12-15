@@ -1,0 +1,39 @@
+﻿@model ProductViewModel
+
+
+@if (User.IsInRole(AppConstants.Administrator))
+{
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" asp-area="@WebContants.AdminArea" asp-controller="Admins" asp-action="EditProduct">
+                <input asp-for="@Model.Id" type="hidden" />
+                <div class="form-group">
+                    <label asp-for="@Model.Price"></label>
+                    <input asp-for="@Model.Price" required class="form-control" />
+                    <span asp-validation-for="@Model.Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Quantity"></label>
+                    <input asp-for="@Model.Quantity" required class="form-control" />
+                    <span asp-validation-for="@Model.Quantity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Title"></label>
+                    <input asp-for="@Model.Title" required class="form-control" />
+                    <span asp-validation-for="@Model.Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Model"></label>
+                    <input asp-for="@Model.Model" required class="form-control" />
+                    <span asp-validation-for="@Model.Model" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Description"></label>
+                    <input asp-for="@Model.Description" required class="form-control" />
+                    <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                </div>
+                <input type="submit" value="Edit" class="btn btn-warning" />
+            </form>
+        </div>
+    </div>
+}

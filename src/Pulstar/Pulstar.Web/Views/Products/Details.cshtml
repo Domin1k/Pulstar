@@ -1,0 +1,26 @@
+﻿@model ProductViewModel
+
+<h2>@Model.Title | @Model.Model</h2>
+<hr />
+<div class="jumbotron">
+    <p>
+        <div class="row">
+            <div class="col-md-3 pull-left">
+                <img src="https://www.pulsar.bg/image/cache/data/products4/Packshots1/World-of-Warcraft-Legion-450x525.jpg" title="game-img" alt="@Model.Title" class="img-responsive"/>
+            </div>
+            <div class="col-md-6 pull-right">
+                <div><strong>Price </strong>@Model.Price EUR</div>
+                <div>@Model.Description</div>
+                <div>
+                    <a asp-area="" asp-controller="Users" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-success">Add To Cart</a>
+                </div>
+            </div>
+            
+        </div>
+    </p>
+    <hr />
+    <p><em>Manufacturer: </em>@Model.Manufacturer</p>
+    <p><em>In stock: </em>@(Model.Quantity > 0 ? "Yes" : "No")</p>
+</div>
+
+@Html.Partial("_EditProduct.cshtml", Model)

@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ProductListingModel>
+
+<h2 class="text-center">@ViewBag.CategoryName</h2>
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <img src="http://www.pulsar.bg/image/cache/data/products4/Packshots3/TotalWarhammer2_pc-180x180.jpg" title="game-img" alt="@product.Title" class="img-responsive" />
+                </div>
+                <div class="panel-footer text-center">
+                    <div>@product.Model | @product.Title</div>
+                    <div>@product.Price EUR</div>
+                </div>
+                <div class="text-center">
+                    <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

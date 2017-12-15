@@ -1,0 +1,58 @@
+﻿@model UserCheckoutCartViewModel
+
+@{ 
+    ViewBag.Title = "Checkout cart";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+@if (Model.CreditCards.Any())
+{
+    <div class="row">
+        <div class="col-md-10">
+            <form method="post">
+                <h4>Create a new account.</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Address"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <select class="form-control" asp-for="@Model.CreditCardId" asp-items="@Model.CreditCards" selected="selected"></select>
+                </div>
+
+                <table class="table table-striped table-hover ">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cartItem in Model.CartProducts)
+                        {
+                            <tr>
+                                <td></td>
+                                <td>@cartItem.Title</td>
+                                <td>@cartItem.Quantity</td>
+                                <td>@cartItem.Price EUR</td>
+                                <td>@Model.TotalCost</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <button type="submit" class="btn btn-default">Checkout</button>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <a asp-area="" asp-controller="Users" asp-action="AddPaymentMethod" class="btn btn-warning">Add credit card</a>
+}

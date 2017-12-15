@@ -2,30 +2,34 @@
 
 <div class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
-        <li class="dropdown open">
+        @if (User.IsInRole(AppConstants.Administrator))
+        {
+            <li><a asp-area="Admin" asp-controller="Admins" asp-action="Index">Administration</a></li>
+        }
+        <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Games <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
                 @foreach (var game in Model.Games)
                 {
-                    <li><a asp-area="" asp-controller="Games" asp-action="Details" asp-route-game="@game">@game</a></li>
+                    <li><a asp-area="" asp-controller="Products" asp-action="Games" asp-route-game="@game">@game</a></li>
                 }
             </ul>
         </li>
-        <li class="dropdown open">
+        <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Consoles <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
                 @foreach (var console in Model.Consoles)
                 {
-                    <li><a asp-area="" asp-controller="Games" asp-action="Details" asp-route-game="@console">@console</a></li>
+                    <li><a asp-area="" asp-controller="Products" asp-action="Consoles" asp-route-console="@console">@console</a></li>
                 }
             </ul>
         </li>
-        <li class="dropdown open">
+        <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Accessories <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
                 @foreach (var accessory in Model.Accessories)
                 {
-                    <li><a asp-area="" asp-controller="Games" asp-action="Details" asp-route-game="@accessory">@accessory</a></li>
+                    <li><a asp-area="" asp-controller="Products" asp-action="Accessories" asp-route-accessory="@accessory">@accessory</a></li>
                 }
             </ul>
         </li>

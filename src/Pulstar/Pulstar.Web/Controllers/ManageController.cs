@@ -9,8 +9,10 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Logging;
     using Pulstar.Data.Models;
+    using Pulstar.Services.Interfaces;
     using Pulstar.Web.Models.ManageViewModels;
     using Pulstar.Web.Services;
 
@@ -23,6 +25,7 @@
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IUserService _userService;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
 
@@ -30,12 +33,14 @@
           UserManager<User> userManager,
           SignInManager<User> signInManager,
           IEmailSender emailSender,
+          IUserService userService,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _userService = userService;
             _logger = logger;
             _urlEncoder = urlEncoder;
         }
@@ -52,13 +57,15 @@
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            var creditCards = await _userService.PaymentMethods(User.Identity.Name);
             var model = new IndexViewModel
             {
                 Username = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
-                StatusMessage = StatusMessage
+                StatusMessage = StatusMessage,
+                CreditCards = creditCards.Select(c => new SelectListItem { Value = c.CreditCardNumber, Text = c.CreditCardNumber }).ToList(),
             };
 
             return View(model);
@@ -379,7 +386,7 @@
             var model = new EnableAuthenticatorViewModel
             {
                 SharedKey = FormatKey(unformattedKey),
-                AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey)
+                AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey),
             };
 
             return View(model);

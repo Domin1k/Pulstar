@@ -46,8 +46,10 @@
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddMvc();
+            services.AddSession();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -63,7 +65,11 @@
                     var context = serviceScope.ServiceProvider.GetService<PulstarDbContext>();
                     context.Database.Migrate();
 
-                    Task.Run(async () => { await context.EnsureSeedCategories(); })
+                    Task.Run(async () =>
+                            {
+                                await context.EnsureSeedCategories();
+                                await context.EnsureSeedGames();
+                            })
                         .GetAwaiter()
                         .GetResult();
 
@@ -83,9 +89,14 @@
             app.UseStaticFiles();
 
             app.UseAuthentication();
-            
+            app.UseSession();
+
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                  name: "areas",
+                  template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
