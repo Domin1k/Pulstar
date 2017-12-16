@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -67,7 +67,7 @@
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductListingModel>> All(string category)
+        public async Task<IEnumerable<ProductListingModel>> All(string category, Expression<Func<Product, object>> orderPredicate, OrderType orderType)
         {
             var categoryEntity = await _context.Categories.FirstOrDefaultAsync(c => c.Name.ToLower() == category.ToLower());
 
@@ -76,25 +76,39 @@
                 throw new InvalidOperationException($"Category {category} does not exists.");
             }
 
-            return await _context
+            var products = _context
                 .Products
                 .Where(p => p.CategoryId == categoryEntity.Id)
-                .OrderByDescending(p => p.Id)
-                .ProjectTo<ProductListingModel>()
-                .ToListAsync();
+                .AsQueryable();
+
+            return await ListProducts(products, orderPredicate, orderType);
+        }
+
+        public async Task<IEnumerable<ProductListingModel>> All(Expression<Func<Product, bool>> wherePredicate, Expression<Func<Product, object>> orderPredicate, OrderType orderType, int take)
+        {
+            var products = _context
+                .Products
+                .AsQueryable();
+            if (wherePredicate != null)
+            {
+                products = products.Where(wherePredicate);
+            }
+
+            products = products.Take(take).AsQueryable();
+            return await ListProducts(products, orderPredicate, orderType);
         }
 
         public async Task EditProduct(int productId, ProductModel product)
         {
             var dbProduct = await RetrieveProductOrThrow(productId);
 
-            ////dbProduct.Price = product.Price;
-            ////dbProduct.Quantity = product.Quantity;
-            ////dbProduct.Title = product.Title;
-            ////dbProduct.Model = product.Model;
-            ////dbProduct.Description = product.Description;
-
-            dbProduct = Mapper.Map<Product>(product);
+            dbProduct.Price = product.Price;
+            dbProduct.Quantity = product.Quantity;
+            dbProduct.Title = product.Title;
+            dbProduct.Model = product.Model;
+            dbProduct.Manufacturer = product.Manufacturer;
+            dbProduct.Discount = product.Discount;
+            dbProduct.Description = product.Description;
 
             _context.Products.Update(dbProduct);
             await _context.SaveChangesAsync();
@@ -139,6 +153,20 @@
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
 
             return product ?? throw new InvalidOperationException($"Product with id {productId} does not exists!");
+        }
+
+        private async Task<IEnumerable<ProductListingModel>> ListProducts(IQueryable<Product> products, Expression<Func<Product, object>> orderPredicate, OrderType orderType)
+        {
+            if (orderType == OrderType.Ascending)
+            {
+                products = products.OrderBy(orderPredicate);
+            }
+            else if (orderType == OrderType.Descending)
+            {
+                products = products.OrderByDescending(orderPredicate);
+            }
+
+            return await products.ProjectTo<ProductListingModel>().ToListAsync();
         }
     }
 }

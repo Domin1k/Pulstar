@@ -16,13 +16,19 @@
                 <div>
                     <a asp-area="" asp-controller="Users" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-success">Add To Cart</a>
                 </div>
-            </div>
-            
+            </div>            
         </div>
     </p>
     <hr />
     <p><em>Manufacturer: </em>@Model.Manufacturer</p>
     <p><em>In stock: </em>@(Model.Quantity > 0 ? "Yes" : "No")</p>
+    <br/>
+    <hr/>
+    <div class="col-md-6">
+        @Html.Partial("_EditProduct.cshtml", Model)
+    </div>
+    <div class="col-md-6">
+        @Html.Partial("_ManageDiscount.cshtml", new ManageDiscountViewModel { ProductId = Model.Id, Discount = Model.Discount, })
+    </div>
+    <div class="clearfix"></div>
 </div>
-
-@Html.Partial("_EditProduct.cshtml", Model)

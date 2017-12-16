@@ -1,8 +1,24 @@
-﻿@{
+﻿@model IEnumerable<ProductListingModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+<h1>Our top discounts!</h1>
+<hr/>
+<div class="jumbotron">
+    <h5 class="text-center">@(TempData.ContainsKey("searchTerm") ? $"{Model.Count()} results found matching your search term." : string.Empty)</h5>
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-3">
+                @Html.DisplayFor(x => product, "ProductListingModel")
+            </div>
+        }
+    </div>
+</div>
+
+@*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -63,4 +79,4 @@
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
     </a>
-</div>
+</div>*@

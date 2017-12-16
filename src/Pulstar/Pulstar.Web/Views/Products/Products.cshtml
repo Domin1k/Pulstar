@@ -2,26 +2,26 @@
 
 <h2 class="text-center">@ViewBag.CategoryName</h2>
 
+<ul class="nav nav-pills">
+    <li class="dropdown active">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">
+            Sort By <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="?criteria=price&order=ascending">Price ascending</a></li>
+            <li><a href="?criteria=price&order=descending">Price descending</a></li>
+            <li class="divider"></li>
+            <li><a href="?criteria=discount&order=ascending">Discount ascending</a></li>
+            <li><a href="?criteria=discount&order=descending">Discount descending</a></li>
+        </ul>
+    </li>
+</ul>
+<div class="margin-bottom-2"></div>
 <div class="row">
     @foreach (var product in Model)
     {
         <div class="col-md-3">
-            <div class="panel panel-default">
-                @if (product.Discount > 0)
-                {
-                    <span class="label label-success">Discount <span class="badge">@product.Discount%</span></span>
-                }
-                <div class="panel-body">
-                    <img src="http://www.pulsar.bg/image/cache/data/products4/Packshots3/TotalWarhammer2_pc-180x180.jpg" title="game-img" alt="@product.Title" class="img-responsive" />
-                </div>
-                <div class="panel-footer text-center">
-                    <div>@product.Model | @product.Title</div>
-                    <div>@product.Price EUR </div>
-                </div>
-                <div class="text-center">
-                    <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">Details</a>
-                </div>
-            </div>
+            @Html.DisplayFor(x => product, "ProductListingModel")
         </div>
     }
 </div>

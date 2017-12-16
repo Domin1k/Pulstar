@@ -23,9 +23,9 @@
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Category>()
-                .HasMany(c => c.Products)
-                .WithOne(p => p.Category)
+            builder.Entity<Product>()
+                .HasOne(p => p.Category)
+                .WithMany(c => c.Products)
                 .HasForeignKey(cp => cp.CategoryId);
 
             builder.Entity<User>()

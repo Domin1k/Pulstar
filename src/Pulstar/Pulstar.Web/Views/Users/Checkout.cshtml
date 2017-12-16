@@ -1,6 +1,6 @@
 ﻿@model UserCheckoutCartViewModel
 
-@{ 
+@{
     ViewBag.Title = "Checkout cart";
 }
 
@@ -54,5 +54,7 @@
 }
 else
 {
-    <a asp-area="" asp-controller="Users" asp-action="AddPaymentMethod" class="btn btn-warning">Add credit card</a>
+    <h5 class="text-center">
+        You do not have any payment methods added, therefore you cannot purchase. Click <a asp-area="" asp-controller="Users" asp-action="AddPaymentMethod">here</a> to add payment method.
+    </h5>
 }

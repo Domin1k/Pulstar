@@ -1,0 +1,18 @@
+﻿@model ManageDiscountViewModel
+
+@if (User.HasPermissions())
+{
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" asp-area="@WebContants.AdminArea" asp-controller="Admins" asp-action="ManageDiscount">
+                <input asp-for="@Model.ProductId" type="hidden" />
+                <div class="form-group">
+                    <label asp-for="@Model.Discount"></label>
+                    <input asp-for="@Model.Discount" required class="form-control" />
+                    <span asp-validation-for="@Model.Discount" class="text-danger"></span>
+                </div>
+                <input type="submit" value="Edit Discount" class="btn btn-warning" />
+            </form>
+        </div>
+    </div>
+}

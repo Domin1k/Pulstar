@@ -18,6 +18,11 @@
                     <span asp-validation-for="@Model.Quantity" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="@Model.Discount"></label>
+                    <input asp-for="@Model.Discount" required class="form-control" />
+                    <span asp-validation-for="@Model.Discount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
                     <label asp-for="@Model.Title"></label>
                     <input asp-for="@Model.Title" required class="form-control" />
                     <span asp-validation-for="@Model.Title" class="text-danger"></span>
@@ -28,11 +33,16 @@
                     <span asp-validation-for="@Model.Model" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="@Model.Manufacturer"></label>
+                    <input asp-for="@Model.Manufacturer" required class="form-control" />
+                    <span asp-validation-for="@Model.Manufacturer" class="text-danger"></span>
+                </div>
+                <div class="form-group">
                     <label asp-for="@Model.Description"></label>
                     <input asp-for="@Model.Description" required class="form-control" />
                     <span asp-validation-for="@Model.Description" class="text-danger"></span>
                 </div>
-                <input type="submit" value="Edit" class="btn btn-warning" />
+                <input type="submit" value="Edit Product" class="btn btn-warning" />
             </form>
         </div>
     </div>

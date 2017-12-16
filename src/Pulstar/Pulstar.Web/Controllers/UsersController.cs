@@ -48,8 +48,7 @@
                 // TODO
                 return Ok();
             }
-
-            var productCategory = await _productService.GetCategory(id);
+            
             var cartItems = new List<int>() { id };
             var currentCart = HttpContext.Session.Get<List<int>>(Key);
             if (currentCart != null && currentCart.Any())
@@ -59,8 +58,7 @@
 
             HttpContext.Session.Set<List<int>>(Key, cartItems);
             TempData.AddSuccessMessage("Added to cart successfully");
-            var redirectUrl = $"/Products/{UrlHelper.GenerateUrl(productCategory.categoryType)}/{productCategory.category}";
-            return Redirect(redirectUrl);
+            return Redirect($"/products/details/{id}");
         }
 
         [HttpGet]
