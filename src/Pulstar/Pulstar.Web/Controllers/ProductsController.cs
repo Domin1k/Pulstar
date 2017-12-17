@@ -52,28 +52,56 @@
             return View(ProductsViewName, products ?? Enumerable.Empty<ProductListingModel>());
         }
 
-        [HttpGet("consoles/{console}")]
-        public async Task<IActionResult> Consoles(string console)
+        [HttpGet("consoles/{console}/{criteria?}/{order?}")]
+        public async Task<IActionResult> Consoles(string console, string criteria, string order)
         {
-            var products = await GetProducts(console, p => p.Id, OrderType.Descending);
-            if (products == null)
+            IEnumerable<ProductListingModel> products = null;
+            try
             {
-                return BadRequest();
+                var expression = GetCriteria(criteria);
+                var orderType = GetOrderType(order);
+                products = await GetProducts(console, expression, orderType);
+                if (products == null)
+                {
+                    TempData.AddErrorMessage($"There are no products for {console}");
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData.AddErrorMessage(ex.Message);
+            }
+            catch (NotSupportedException ex)
+            {
+                TempData.AddErrorMessage(ex.Message);
             }
 
-            return View(ProductsViewName, products);
+            return View(ProductsViewName, products ?? Enumerable.Empty<ProductListingModel>());
         }
 
-        [HttpGet("accessories/{accessory}")]
-        public async Task<IActionResult> Accessories(string accessory)
+        [HttpGet("accessories/{accessory}/{criteria?}/{order?}")]
+        public async Task<IActionResult> Accessories(string accessory, string criteria, string order)
         {
-            var products = await GetProducts(accessory, p => p.Id, OrderType.Descending);
-            if (products == null)
+            IEnumerable<ProductListingModel> products = null;
+            try
             {
-                return BadRequest();
+                var expression = GetCriteria(criteria);
+                var orderType = GetOrderType(order);
+                products = await GetProducts(accessory, expression, orderType);
+                if (products == null)
+                {
+                    TempData.AddErrorMessage($"There are no products for {accessory}");
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData.AddErrorMessage(ex.Message);
+            }
+            catch (NotSupportedException ex)
+            {
+                TempData.AddErrorMessage(ex.Message);
             }
 
-            return View(ProductsViewName, products);
+            return View(ProductsViewName, products ?? Enumerable.Empty<ProductListingModel>());
         }
 
         [HttpGet("details/{id}")]
@@ -103,14 +131,7 @@
             }
 
             ViewBag.CategoryName = categoryName;
-            try
-            {
-                return await _productService.All(categoryName, orderPredicate, orderType);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return await _productService.All(categoryName, orderPredicate, orderType);
         }
 
         private Expression<Func<Product, object>> GetCriteria(string inputCriteria)

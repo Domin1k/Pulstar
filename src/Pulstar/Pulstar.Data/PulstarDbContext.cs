@@ -19,6 +19,8 @@
 
         public DbSet<CreditCard> CreditCards { get; set; }
 
+        public DbSet<Purchase> Purchases { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -29,12 +31,19 @@
                 .HasForeignKey(cp => cp.CategoryId);
 
             builder.Entity<User>()
-                .HasMany(u => u.Products);
+                .HasMany(u => u.Purchases)
+                .WithOne(p => p.User)
+                .HasForeignKey(pu => pu.UserId);
 
             builder.Entity<User>()
                 .HasMany(u => u.CreditCards)
                 .WithOne(c => c.Owner)
                 .HasForeignKey(cu => cu.OwnerId);
+
+            builder.Entity<Purchase>()
+                .HasMany(p => p.Products)
+                .WithOne(pr => pr.Purchase)
+                .HasForeignKey(pp => pp.PurchaseId);
         }
     }
 }

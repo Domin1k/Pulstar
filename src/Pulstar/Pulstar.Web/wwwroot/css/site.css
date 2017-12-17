@@ -34,6 +34,32 @@ table select {
 .margin-bottom-2 {
     margin-bottom: 2%;
 }
+
+.search-box {
+    width: 150px !important;
+}
+
+.product-panel {
+    background-color: #151515;
+    border: 2px solid #151515;
+}
+
+    .product-panel .buy-product-btn {
+        visibility: hidden;
+    }
+
+    .product-panel:hover .buy-product-btn {
+        visibility: visible;
+    }
+
+    .product-panel .panel-footer {
+        background-color: #151515;
+    }
+
+    .product-panel:hover {
+        border: 2px solid #3c3c3c;
+    }
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */

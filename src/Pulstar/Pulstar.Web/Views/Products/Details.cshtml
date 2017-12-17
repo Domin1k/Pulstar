@@ -1,29 +1,34 @@
 ﻿@model ProductViewModel
-
+@{
+    var inStockText = Model.Quantity > 0 ? "Yes" : "No";
+    var inStockClassName = Model.Quantity > 0 ? "text-success" : "text-danger";
+}
 <h2>@Model.Title | @Model.Model</h2>
 <hr />
 <div class="jumbotron">
-    <p>
-        <div class="row">
-            <div class="col-md-3 pull-left">
-                <img src="https://www.pulsar.bg/image/cache/data/products4/Packshots1/World-of-Warcraft-Legion-450x525.jpg" title="game-img" alt="@Model.Title" class="img-responsive"/>
-            </div>
-            <div class="col-md-6 pull-right">
-                <div><strong>Price </strong>@Model.Price EUR</div>
-                <div><strong>Discount </strong>@(Model.Discount > 0 ? $"{Model.Discount} %" : "None") </div>
-                <div><strong>End Price </strong>@Model.PriceAfterDiscount EUR</div>
-                <div>@Model.Description</div>
-                <div>
-                    <a asp-area="" asp-controller="Users" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-success">Add To Cart</a>
-                </div>
-            </div>            
+    <div class="row">
+        <div class="col-md-3 pull-left">
+            <img src="https://www.pulsar.bg/image/cache/data/products4/Packshots1/World-of-Warcraft-Legion-450x525.jpg" title="game-img" alt="@Model.Title" class="img-rounded" />
         </div>
-    </p>
+        <div class="col-md-6 pull-right">
+            <div class="margin-bottom-2"><strong>Price </strong><span class="text-success">@Model.Price EUR</span></div>
+            <div class="margin-bottom-2" "><strong>Discount </strong><span class="text-success">@(Model.Discount > 0 ? $"{Model.Discount}" : "None")</span></div>
+            <div class="margin-bottom-2" "><strong>End Price </strong><span class="text-success">@Model.PriceAfterDiscount EUR</span></div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Description</h3>
+                </div>
+                <div class="panel-body">
+                    @Model.Description
+                </div>
+            </div>
+            <a asp-area="" asp-controller="Users" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-success">Add To Cart</a>
+        </div>
+    </div>
     <hr />
-    <p><em>Manufacturer: </em>@Model.Manufacturer</p>
-    <p><em>In stock: </em>@(Model.Quantity > 0 ? "Yes" : "No")</p>
-    <br/>
-    <hr/>
+    <p><em>Manufacturer: </em><span class="text-success">@Model.Manufacturer</span></p>
+    <p class="margin-bottom-2"><em>In stock: </em><span class="@inStockClassName">@inStockText</span></p>
+    <hr />
     <div class="col-md-6">
         @Html.Partial("_EditProduct.cshtml", Model)
     </div>

@@ -1,13 +1,13 @@
 ﻿namespace Pulstar.Services.Interfaces
 {
-    using System.Threading.Tasks;
+    using Pulstar.Data.Models;
 
     public interface IUserAccountService
     {
-        bool HasEnoughFunds(decimal funds);
+        bool HasEnoughFunds(User user, decimal funds);
 
-        void Withdraw(decimal funds);
+        void Withdraw(User user, decimal funds);
 
-        void Deposit(decimal funds);
+        void Deposit(User user, decimal funds);
     }
 }

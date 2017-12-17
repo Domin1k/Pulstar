@@ -10,7 +10,7 @@
     public interface IUserService
     {
         Task<IEnumerable<UserListingModel>> All(int takeCount = AppConstants.DefaultTakeCount);
-
+        
         Task AssignToRole(string userName, string roleName);
 
         Task AddPaymentMethod(string userName, string creditCardNumber, string cvv, DateTime expirationDate);
@@ -18,7 +18,5 @@
         Task<IEnumerable<UserPaymentMethodsModel>> PaymentMethods(string userName);
 
         Task DepositFunds(string userName, decimal amountToDeposit, IUserAccountService userAccountService);
-
-        Task BuyProducts(string userName, IEnumerable<ProductModel> products, IUserAccountService userAccountService);
     }
 }

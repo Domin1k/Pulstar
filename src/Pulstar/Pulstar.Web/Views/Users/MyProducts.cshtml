@@ -1,0 +1,41 @@
+﻿@model IEnumerable<PurchaseListingModel>
+
+@{
+    ViewBag.Title = User.Identity.Name;
+    var index = 0;
+}
+
+<h2>Hello @ViewBag.Title</h2>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="active">#</th>
+            <th class="active">Code</th>
+            <th class="active">Date</th>
+            <th class="active">Products</th>
+            <th class="active">Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var purchase in Model)
+        {
+            <tr>
+                <td class="active">@(++index)</td>
+                <td>@purchase.UniqueCode</td>
+                <td>@purchase.Date</td>
+                <td class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Products <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        @foreach (var product in purchase.Products)
+                        {
+                            <li><a href="#">@product.ProductModel</a></li>
+                            <li><a href="#">@product.ProductTitle</a></li>
+                        }
+                    </ul>
+                </td>
+                <td>@purchase.Amount</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -6,13 +6,10 @@
     using System.Threading.Tasks;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Pulstar.Common.Helpers;
-    using Pulstar.Data.Models;
     using Pulstar.Models.Products;
-    using Pulstar.Services;
+    using Pulstar.Models.Purchase;
     using Pulstar.Services.Interfaces;
     using Pulstar.Web.Models.UsersViewModels;
 
@@ -21,25 +18,30 @@
     {
         private readonly IProductService _productService;
         private readonly IUserService _userService;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserAccountService _userAccountService;
+        private readonly IPurchaseService _purchaseService;
 
-        public UsersController(IProductService productService, IUserService userService, UserManager<User> userManager)
+        public UsersController(
+            IProductService productService,
+            IUserService userService,
+            IUserAccountService userAccountService,
+            IPurchaseService purchaseService)
         {
             _productService = productService;
             _userService = userService;
-            _userManager = userManager;
+            _userAccountService = userAccountService;
+            _purchaseService = purchaseService;
         }
 
         protected string Key => $"{User.Identity.Name}-Cart";
 
         public async Task<IActionResult> Cart()
         {
-            ViewBag.CartTitle = "Cart";
             var model = await GetCurrentUserCartItems();
             return View(model);
         }
 
-        public async Task<IActionResult> AddToCart(int id)
+        public IActionResult AddToCart(int id)
         {
             if (id <= 0)
             {
@@ -48,7 +50,7 @@
                 // TODO
                 return Ok();
             }
-            
+
             var cartItems = new List<int>() { id };
             var currentCart = HttpContext.Session.Get<List<int>>(Key);
             if (currentCart != null && currentCart.Any())
@@ -93,31 +95,23 @@
             try
             {
                 var cartItems = await GetCurrentUserCartItems();
-                var userName = User.Identity.Name;
-                var user = await _userManager.FindByNameAsync(userName);
-                var userAccount = new UserAccountService(user);
-                await _userService.BuyProducts(userName, cartItems, userAccount);
+                var purchaseProduct = cartItems
+                    .Select(c => new PurchaseProduct
+                    {
+                        Id = c.Id,
+                        PriceAfterDiscount = c.PriceAfterDiscount,
+                    })
+                    .ToList();
+                await _purchaseService.AddPurchase(purchaseProduct, User.Identity.Name);
             }
             catch (InvalidOperationException ex)
             {
                 TempData.AddErrorMessage(ex.Message);
-                throw;
+                return RedirectToAction(nameof(UsersController.Checkout), "Users");
             }
 
             TempData.AddSuccessMessage("Thank you for your purchase!");
             return Redirect("/");
-        }
-
-        [HttpGet]
-        public IActionResult AddPaymentMethod()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Deposit()
-        {
-            return View();
         }
 
         [HttpPost]
@@ -130,14 +124,12 @@
 
             try
             {
-                var user = await _userManager.FindByNameAsync(User.Identity.Name);
-                var userAccount = new UserAccountService(user);
-                await _userService.DepositFunds(User.Identity.Name, model.AmountToDeposit, userAccount);
+                await _userService.DepositFunds(User.Identity.Name, model.AmountToDeposit, _userAccountService);
             }
             catch (InvalidOperationException ex)
             {
                 TempData.AddErrorMessage(ex.Message);
-                throw;
+                return RedirectToAction(nameof(UsersController.Deposit), "Users");
             }
 
             TempData.AddSuccessMessage("Successfully deposited funds.");
@@ -159,10 +151,28 @@
             catch (InvalidOperationException ex)
             {
                 TempData.AddErrorMessage(ex.Message);
-                throw;
+                return RedirectToAction(nameof(UsersController.AddPaymentMethod), "Users");
             }
 
+            TempData.AddSuccessMessage("You have succesfully added payment method to user.");
             return RedirectToAction(nameof(ManageController.Index), "Manage");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyProducts()
+        {
+            IEnumerable<PurchaseListingModel> products = null;
+            try
+            {
+                products = await _purchaseService.Products(User.Identity.Name);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData.AddErrorMessage(ex.Message);
+                return Redirect("/");
+            }
+
+            return View(products ?? Enumerable.Empty<PurchaseListingModel>());
         }
 
         private async Task<List<ProductModel>> GetCurrentUserCartItems()

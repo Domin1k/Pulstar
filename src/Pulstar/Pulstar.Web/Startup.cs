@@ -46,6 +46,8 @@
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IPurchaseService, PurchaseService>();
+            services.AddTransient<IUserAccountService, UserAccountService>();
             services.AddTransient<IUserService, UserService>();
 
             services.AddMvc();
@@ -60,6 +62,7 @@
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
 
+                // TODO
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
                     var context = serviceScope.ServiceProvider.GetService<PulstarDbContext>();

@@ -12,9 +12,10 @@ using System;
 namespace Pulstar.Data.Migrations
 {
     [DbContext(typeof(PulstarDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171217141713_BusinessLogicChange")]
+    partial class BusinessLogicChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -18,7 +18,7 @@
         [Range(0, double.MaxValue)]
         public decimal AccountBalance { get; set; }
 
-        public List<Product> Products { get; set; } = new List<Product>();
+        public List<Purchase> Purchases { get; set; } = new List<Purchase>();
 
         public List<CreditCard> CreditCards { get; set; } = new List<CreditCard>();
     }

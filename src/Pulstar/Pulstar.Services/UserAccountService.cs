@@ -1,21 +1,22 @@
 ﻿namespace Pulstar.Services
 {
     using System;
+    using Pulstar.Data;
     using Pulstar.Data.Models;
     using Pulstar.Services.Interfaces;
 
     public class UserAccountService : IUserAccountService
     {
-        private User _user;
+        private readonly PulstarDbContext _pulstarDb;
 
-        public UserAccountService(User user)
+        public UserAccountService(PulstarDbContext pulstarDb)
         {
-            _user = user ?? throw new ArgumentNullException($"{nameof(user)} cannot be null.");
+            _pulstarDb = pulstarDb;
         }
 
-        public void Deposit(decimal funds)
+        public void Deposit(User user, decimal funds)
         {
-            decimal balanceBefore = balanceBefore = _user.AccountBalance;
+            decimal balanceBefore = balanceBefore = user.AccountBalance;
             try
             {
                 if (funds <= 0)
@@ -23,24 +24,23 @@
                     throw new InvalidOperationException($"Funds must be equal or greater than zero.");
                 }
 
-                _user.AccountBalance += funds;
+                user.AccountBalance += funds;
             }
             catch (Exception)
             {
                 // TODO log error.
-                DoRollback(balanceBefore);
+                DoRollback(user, balanceBefore);
                 throw;
             }
+
+            _pulstarDb.Users.Update(user);
         }
 
-        public bool HasEnoughFunds(decimal funds)
-        {
-            return (_user.AccountBalance - funds) > 0m;
-        }
+        public bool HasEnoughFunds(User user, decimal funds) => (user.AccountBalance - funds) > 0m;
 
-        public void Withdraw(decimal funds)
+        public void Withdraw(User user, decimal funds)
         {
-            decimal balanceBefore = _user.AccountBalance;
+            decimal balanceBefore = user.AccountBalance;
             try
             {
                 if (funds <= 0)
@@ -48,22 +48,24 @@
                     throw new InvalidOperationException($"Funds must be equal or greater than zero.");
                 }
 
-                _user.AccountBalance -= funds;
+                user.AccountBalance -= funds;
             }
             catch (Exception)
             {
                 // TODO log error.
-                DoRollback(balanceBefore);
+                DoRollback(user, balanceBefore);
                 throw;
             }
+
+            _pulstarDb.Users.Update(user);
         }
 
-        private void DoRollback(decimal amountBefore)
+        private void DoRollback(User user, decimal amountBefore)
         {
-            var currentBalance = _user.AccountBalance;
+            var currentBalance = user.AccountBalance;
             if (amountBefore != currentBalance)
             {
-                _user.AccountBalance = currentBalance;
+                user.AccountBalance = currentBalance;
             }
         }
     }

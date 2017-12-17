@@ -11,7 +11,6 @@
     using Pulstar.Common.Helpers;
     using Pulstar.Data;
     using Pulstar.Data.Models;
-    using Pulstar.Models.Products;
     using Pulstar.Models.Users;
     using Pulstar.Services.Interfaces;
 
@@ -86,46 +85,7 @@
                 throw new InvalidOperationException($"Add to {roleName} for {userName} failed.");
             }
         }
-
-        public async Task BuyProducts(string userName, IEnumerable<ProductModel> products, IUserAccountService userAccountService)
-        {
-            var user = await _dbContext.Users.Where(u => u.UserName == userName).Include(u => u.Products).FirstOrDefaultAsync();
-            var productIds = products.Select(p => p.Id).ToList();
-            var productsToBuy = await _dbContext.Products
-                .Where(p => productIds.Contains(p.Id))
-                .ToListAsync();
-
-            foreach (var dbproduct in productsToBuy)
-            {
-                var cartProduct = products.Where(p => p.Id == dbproduct.Id).Select(p => p.Price).FirstOrDefault();
-                if (cartProduct != dbproduct.Price)
-                {
-                    throw new InvalidOperationException("There is mismatch between cart products prices and real product prices!");
-                }
-
-                user.Products.Add(new Product
-                {
-                    Id = dbproduct.Id,
-                    CategoryId = dbproduct.CategoryId,
-                    Description = dbproduct.Description,
-                    Model = dbproduct.Model,
-                    Manufacturer = dbproduct.Manufacturer,
-                    Price = dbproduct.Price,
-                    Quantity = dbproduct.Quantity,
-                    Title = dbproduct.Title,
-                });
-            }
-
-            var productsPrice = products.Sum(p => p.Price);
-            if (!userAccountService.HasEnoughFunds(productsPrice))
-            {
-                throw new InvalidOperationException($"User {userName} does not have enough funds to perform this purchase.");
-            }
-
-            await _dbContext.SaveChangesAsync();
-            userAccountService.Withdraw(productsPrice);
-        }
-
+        
         public async Task DepositFunds(string userName, decimal amountToDeposit, IUserAccountService userAccountService)
         {
             if (amountToDeposit <= 0)
@@ -140,7 +100,7 @@
                 throw new InvalidOperationException($"{user.UserName} does not have any payment methods available. Please add payment method and try again.");
             }
 
-            userAccountService.Deposit(amountToDeposit);
+            userAccountService.Deposit(user, amountToDeposit);
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
         }

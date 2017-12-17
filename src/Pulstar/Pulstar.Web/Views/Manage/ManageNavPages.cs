@@ -1,9 +1,6 @@
 ﻿namespace Pulstar.Web.Views.Manage
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
@@ -13,6 +10,10 @@
 
         public static string Index => "Index";
 
+        public static string AddPaymentMethod => "AddPaymentMethod";
+
+        public static string Deposit => "Deposit";
+
         public static string ChangePassword => "ChangePassword";
 
         public static string ExternalLogins => "ExternalLogins";
@@ -20,6 +21,10 @@
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
+
+        public static string AddPaymentMethodNavClass(ViewContext viewContext) => PageNavClass(viewContext, AddPaymentMethod);
+
+        public static string DepositNavClass(ViewContext viewContext) => PageNavClass(viewContext, Deposit);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 

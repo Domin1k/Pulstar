@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<ProductModel>
-
+@{ 
+    ViewBag.CartTitle = "Cart";
+}
 <h2>@ViewBag.CartTitle</h2>
 
 @if (Model.Any())

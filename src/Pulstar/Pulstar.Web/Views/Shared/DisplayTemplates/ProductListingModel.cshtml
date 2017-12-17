@@ -1,18 +1,22 @@
 ﻿@model ProductListingModel
 
-<div class="panel panel-default">
-    @if (Model.Discount > 0)
-    {
-        <span class="label label-success">Discount <span class="badge">@Model.Discount%</span></span>
-    }
+@{ 
+    var discountClass = Model.Discount > 0 ? "visibility: visible;" : "visibility: hidden;";
+}
+
+<div class="panel panel-default product-panel">
+    <span style="@discountClass" class="label label-warning">Discount <span class="badge">@Model.Discount%</span></span>
     <div class="panel-body">
-        <img src="http://www.pulsar.bg/image/cache/data/products4/Packshots3/TotalWarhammer2_pc-180x180.jpg" title="game-img" alt="@Model.Title" class="img-responsive" />
+        <img src="http://www.pulsar.bg/image/cache/data/products4/Packshots3/TotalWarhammer2_pc-180x180.jpg" title="game-img" alt="@Model.Title" class="img-thumbnail" />
     </div>
     <div class="panel-footer text-center">
-        <div>@Model.Model | @Model.Title</div>
-        <div>@Model.Price EUR </div>
-    </div>
-    <div class="text-center">
-        <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">Details</a>
+        <div class="text-center">
+            <div class="margin-bottom-2"><strong><span class="text-primary">@Model.Model</span> | <span class="text-warning">@Model.Title</span></strong></div>
+            <div class="margin-bottom-2"><strong>@Model.Price EUR</strong></div>
+        </div>
+        <div class="text-center buy-product-btn">
+            <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id" class="btn-sm btn-primary">Details</a>
+        </div>
+        <div class="clearfix"></div>
     </div>
 </div>

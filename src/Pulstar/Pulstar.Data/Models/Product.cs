@@ -32,5 +32,9 @@
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }
+
+        public int? PurchaseId { get; set; }
+
+        public Purchase Purchase { get; set; }
     }
 }

@@ -135,6 +135,12 @@
         }
 
         [HttpGet]
+        public IActionResult Deposit() => View();
+
+        [HttpGet]
+        public IActionResult AddPaymentMethod() => View();
+
+        [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
             var user = await _userManager.GetUserAsync(User);
