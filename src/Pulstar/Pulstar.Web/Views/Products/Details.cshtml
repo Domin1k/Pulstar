@@ -2,15 +2,13 @@
 @{
     var inStockText = Model.Quantity > 0 ? "Yes" : "No";
     var inStockClassName = Model.Quantity > 0 ? "text-success" : "text-danger";
-    var base64 = Convert.ToBase64String(Model.Image);
-    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 }
 <h2>@Model.Title | @Model.Model</h2>
 <hr />
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-3 pull-left">
-            <img src="@imgSrc" title="game-img" alt="@Model.Title" class="img-rounded" />
+            <img src="@Model.Image.ToBase64()" title="game-img" alt="@Model.Title" class="img-rounded" />
         </div>
         <div class="col-md-6 pull-right">
             <div class="margin-bottom-2"><strong>Price </strong><span class="text-success">@Model.Price EUR</span></div>
