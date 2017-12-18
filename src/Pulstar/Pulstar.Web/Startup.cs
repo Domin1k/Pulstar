@@ -71,7 +71,7 @@
                     Task.Run(async () =>
                             {
                                 await context.EnsureSeedCategories();
-                                await context.EnsureSeedGames();
+                                await context.EnsureSeedGames($"{env.ContentRootPath}\\wwwroot\\images\\defaultImg.jpg");
                             })
                         .GetAwaiter()
                         .GetResult();

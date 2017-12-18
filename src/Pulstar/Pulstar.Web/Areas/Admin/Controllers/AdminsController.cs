@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,6 +16,7 @@
     using Pulstar.Models.Products;
     using Pulstar.Services.Interfaces;
     using Pulstar.Web.Areas.Admin.Models.Users;
+    using Pulstar.Web.Extensions;
     using Pulstar.Web.Infrastructure.Constants;
     using Pulstar.Web.Infrastructure.Extensions;
     using Pulstar.Web.Models.ProductsViewModels;
@@ -51,7 +53,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProduct(ProductViewModel input)
+        public async Task<IActionResult> EditProduct(ProductViewModel input, IFormFile image)
         {
             if (!ModelState.IsValid)
             {
@@ -68,8 +70,9 @@
                 Quantity = input.Quantity,
                 Title = input.Title,
             };
+            var byteImage = await image.ToByteArrayAsync();
 
-            await _productService.EditProduct(input.Id, productModel);
+            await _productService.EditProduct(input.Id, productModel, byteImage);
 
             return Redirect($"/products/details/{input.Id}");
         }

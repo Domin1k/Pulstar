@@ -12,7 +12,8 @@
         @if (Model.CreditCards.Any())
         {
             <select asp-items="Model.CreditCards" class="form-control"></select>
-        }else
+        }
+        else
         {
             <em>You don't have any credits cards added.</em>
         }

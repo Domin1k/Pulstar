@@ -34,6 +34,8 @@
         public double Discount { get; set; }
 
         [Range(0, double.MaxValue)]
-        public decimal PriceAfterDiscount { get; set; }
+        public decimal PriceAfterDiscount { get; set; }  
+        
+        public byte[] Image { get; set; }
     }
 }

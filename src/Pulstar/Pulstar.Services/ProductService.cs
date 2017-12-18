@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using AutoMapper.QueryableExtensions;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Pulstar.Common.Enums;
@@ -98,7 +100,7 @@
             return await ListProducts(products, orderPredicate, orderType);
         }
 
-        public async Task EditProduct(int productId, ProductModel product)
+        public async Task EditProduct(int productId, ProductModel product, byte[] image)
         {
             var dbProduct = await RetrieveProductOrThrow(productId);
 
@@ -109,6 +111,7 @@
             dbProduct.Manufacturer = product.Manufacturer;
             dbProduct.Discount = product.Discount;
             dbProduct.Description = product.Description;
+            dbProduct.Image = image;
 
             _context.Products.Update(dbProduct);
             await _context.SaveChangesAsync();

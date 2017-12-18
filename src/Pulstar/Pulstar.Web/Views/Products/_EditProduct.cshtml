@@ -5,7 +5,7 @@
 {
     <div class="row">
         <div class="col-md-6">
-            <form method="post" asp-area="@WebContants.AdminArea" asp-controller="Admins" asp-action="EditProduct" class="form-horizontal">
+            <form method="post" asp-area="@WebContants.AdminArea" asp-controller="Admins" asp-action="EditProduct" class="form-horizontal" enctype="multipart/form-data">
                 <input asp-for="@Model.Id" type="hidden" />
                 <div class="form-group">
                     <label asp-for="@Model.Price"></label>
@@ -41,6 +41,10 @@
                     <label asp-for="@Model.Description"></label>
                     <textarea asp-for="@Model.Description" required class="form-control" ></textarea>
                     <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Description"></label>
+                    <input name="image" type="file" accept="image/*" required class="form-control" />
                 </div>
                 <input type="submit" value="Edit Product" class="btn btn-warning" />
             </form>

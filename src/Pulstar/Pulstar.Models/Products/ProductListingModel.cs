@@ -15,6 +15,8 @@
 
         public string Model { get; set; }
 
+        public byte[] Image { get; set; }
+
         public decimal PriceAfterDiscount => Price - (Price * (decimal)Discount / 100);
     }
 }

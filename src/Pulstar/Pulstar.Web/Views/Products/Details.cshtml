@@ -2,18 +2,20 @@
 @{
     var inStockText = Model.Quantity > 0 ? "Yes" : "No";
     var inStockClassName = Model.Quantity > 0 ? "text-success" : "text-danger";
+    var base64 = Convert.ToBase64String(Model.Image);
+    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 }
 <h2>@Model.Title | @Model.Model</h2>
 <hr />
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-3 pull-left">
-            <img src="https://www.pulsar.bg/image/cache/data/products4/Packshots1/World-of-Warcraft-Legion-450x525.jpg" title="game-img" alt="@Model.Title" class="img-rounded" />
+            <img src="@imgSrc" title="game-img" alt="@Model.Title" class="img-rounded" />
         </div>
         <div class="col-md-6 pull-right">
             <div class="margin-bottom-2"><strong>Price </strong><span class="text-success">@Model.Price EUR</span></div>
-            <div class="margin-bottom-2" "><strong>Discount </strong><span class="text-success">@(Model.Discount > 0 ? $"{Model.Discount}" : "None")</span></div>
-            <div class="margin-bottom-2" "><strong>End Price </strong><span class="text-success">@Model.PriceAfterDiscount EUR</span></div>
+            <div class="margin-bottom-2"><strong>Discount </strong><span class="text-success">@(Model.Discount > 0 ? $"{Model.Discount}" : "None")</span></div>
+            <div class="margin-bottom-2"><strong>End Price </strong><span class="text-success">@Model.PriceAfterDiscount EUR</span></div>
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3 class="panel-title">Description</h3>

@@ -20,7 +20,7 @@
 
         Task AddProduct(ProductModel product);
 
-        Task EditProduct(int productId, ProductModel product);
+        Task EditProduct(int productId, ProductModel product, byte[] image);
 
         Task AddDiscount(int productId, double discount);
 

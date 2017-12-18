@@ -29,6 +29,8 @@
         [Range(0, int.MaxValue)]
         public int Quantity { get; set; }
 
+        public byte[] Image { get; set; }
+
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@
             await SeedUser(roleManager, userManager, AppConstants.Manager, managerEmail, password);
         }
 
-        public static async Task EnsureSeedGames(this PulstarDbContext context)
+        public static async Task EnsureSeedGames(this PulstarDbContext context, string defaultImageFilePath)
         {
             const int gamesPerCategory = 5;
 
@@ -48,6 +49,7 @@
                         Quantity = random.Next(0, 100),
                         Discount = random.Next(0, 100),
                         Model = $"{title}{i + 1}",
+                        Image = File.ReadAllBytes(defaultImageFilePath),
                         Description = @"Lorem ipsum dolor sit amet, dico congue reprimique an quo. Ex sea solum rebum dolorem. Duis malis fierent ea vis, ne his idque soluta. Prima idque debet cu vel, mea illum libris ei. Mundi elitr suscipit vel ad, accumsan repudiandae te sit. Unum luptatum vis et.",
                     };
                     context.Products.Add(game);

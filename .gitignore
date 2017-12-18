@@ -286,3 +286,5 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+/src/Pulstar/Pulstar.Web/appsettings.Development.json
+/src/Pulstar/Pulstar.Web/appsettings.json
