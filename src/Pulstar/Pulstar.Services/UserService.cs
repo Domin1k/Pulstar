@@ -53,7 +53,7 @@
             var creditCard = new CreditCard
             {
                 CardType = creditCardType,
-                CreditCardNumber = creditCardNumber,
+                CreditCardNumber = CreditCardHelper.Encrypt(creditCardNumber),
                 CVV = cvv,
                 IsActive = true,
                 ExpirationDate = expirationDate,

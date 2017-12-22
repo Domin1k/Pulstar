@@ -17,5 +17,20 @@
 
             throw new NotSupportedException($"Sorry, but our application supports only VISA.");
         }
+
+        public static string Encrypt(string ccNum)
+        {
+            return Convert.ToString((Convert.ToInt64(ccNum) * 13) + 43);
+        }
+
+        public static string Decrypt(string encryptedCcNum)
+        {
+            return Convert.ToString((Convert.ToInt64(encryptedCcNum) - 43) / 13);
+        }
+
+        public static string ReplaceCreditCardUI(string creditCardNumber)
+        {
+            return creditCardNumber.Replace(creditCardNumber.Substring(0, creditCardNumber.Length - 3), new string('*', creditCardNumber.Length - 3));
+        }
     }
 }

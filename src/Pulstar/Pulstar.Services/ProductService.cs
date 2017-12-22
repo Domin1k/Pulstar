@@ -110,6 +110,7 @@
             dbProduct.Discount = product.Discount;
             dbProduct.Description = product.Description;
             dbProduct.Image = image;
+            dbProduct.UpdatedOn = DateTime.UtcNow;
 
             _context.Products.Update(dbProduct);
             await _context.SaveChangesAsync();

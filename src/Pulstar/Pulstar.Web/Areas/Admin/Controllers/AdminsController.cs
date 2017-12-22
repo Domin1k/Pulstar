@@ -10,8 +10,10 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
     using Pulstar.Common.Constants;
+    using Pulstar.Common.Enums;
     using Pulstar.Models.Products;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Web.Areas.Admin.Models.Categories;
     using Pulstar.Web.Areas.Admin.Models.Users;
     using Pulstar.Web.Extensions;
     using Pulstar.Web.Infrastructure.Constants;
@@ -27,12 +29,18 @@
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserService _userService;
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public AdminsController(RoleManager<IdentityRole> roleManager, IUserService userService, IProductService productService)
+        public AdminsController(
+            RoleManager<IdentityRole> roleManager,
+            IUserService userService,
+            IProductService productService,
+            ICategoryService categoryService)
         {
             _roleManager = roleManager;
             _userService = userService;
             _productService = productService;
+            _categoryService = categoryService;
         }
 
         [Authorize(Roles = AppConstants.Administrator)]
@@ -49,6 +57,85 @@
                 })
                 .ToList();
             return View(model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AppConstants.Administrator)]
+        public IActionResult ManageCategory(string id) => View("ManageCategory", id);
+
+        [Authorize(Roles = AppConstants.Administrator)]
+        [HttpGet]
+        public IActionResult AddCategory()
+        {
+            var categoryTypes = Enum
+                .GetValues(typeof(CategoryType))
+                .Cast<CategoryType>()
+                .Select(r => new SelectListItem { Text = r.ToString(), Value = r.ToString() })
+                .ToList();
+            return View(new AddCategoryViewModel { CategoryTypes = categoryTypes });
+        }
+
+        [Authorize(Roles = AppConstants.Administrator)]
+        [HttpPost]
+        public async Task<IActionResult> AddCategory(AddCategoryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData.AddErrorMessage(TempMessages.GeneralInvalidInputData);
+                return RedirectToAction(nameof(AdminsController.AddCategory));
+            }
+
+            CategoryType catType;
+
+            if (!Enum.TryParse<CategoryType>(model.CategoryTypeId, out catType))
+            {
+                TempData.AddErrorMessage(string.Format(TempMessages.InvalidCategoryType, model.Name));
+                return RedirectToAction(nameof(AdminsController.AddCategory));
+            }
+
+            try
+            {
+                await _categoryService.AddCategory(model.Name, catType);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData.AddErrorMessage(ex.Message);
+            }
+
+            TempData.AddSuccessMessage(string.Format(TempMessages.AddedCategorySuccess, model.Name));
+
+            return Redirect("/");
+        }
+
+        public IActionResult DeleteCategory(string id) => View(new ManageCategoryViewModel { Name = id });
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory(ManageCategoryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData.AddErrorMessage(TempMessages.GeneralInvalidInputData);
+                return RedirectToAction(nameof(AdminsController.DeleteCategory), new { id = model.Name });
+            }
+
+            try
+            {
+                await _categoryService.DeleteCategory(model.Name);
+            }
+            catch (InvalidOperationException)
+            {
+                TempData.AddErrorMessage(TempMessages.ErrorDuringCategoryDelete);
+            }
+
+            TempData.AddSuccessMessage(TempMessages.SuccessCategoryDelete);
+
+            return RedirectToAction(nameof(AdminsController.Index), AdminController);
+        }
+
+        public IActionResult EditCagory(string id)
+        {
+            // TODO
+            return RedirectToAction(nameof(AdminsController.Index), AdminController);
         }
 
         [HttpPost]
@@ -78,7 +165,14 @@
             };
             var byteImage = await image.ToByteArrayAsync();
 
-            await _productService.EditProduct(input.Id, productModel, byteImage);
+            try
+            {
+                await _productService.EditProduct(input.Id, productModel, byteImage);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData.AddErrorMessage(ex.Message);
+            }
 
             return Redirect(string.Format(ProductDetails, input.Id));
         }
@@ -106,7 +200,7 @@
 
         [Authorize(Roles = AppConstants.Administrator)]
         [HttpPost]
-        public async Task<IActionResult> Manage(AddToRoleModel model)
+        public async Task<IActionResult> Manage(AddToRoleViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -114,8 +208,15 @@
             }
             else
             {
-                await _userService.AssignToRole(model.UserName, model.Role);
-            }            
+                try
+                {
+                    await _userService.AssignToRole(model.UserName, model.Role);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TempData.AddErrorMessage(ex.Message);
+                }
+            }
 
             return RedirectToAction(nameof(AdminsController.Index), AdminController);
         }

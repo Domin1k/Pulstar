@@ -1,29 +1,46 @@
 ﻿@model IEnumerable<ProductListingModel>
+@{
+    ViewData["Title"] = "Products";
+}
 
 <h2 class="text-center">@ViewBag.CategoryName</h2>
 
-<ul class="nav nav-pills">
-    <li class="dropdown active">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">
-            Sort By <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            <li><a href="?criteria=price&order=ascending">Price ascending</a></li>
-            <li><a href="?criteria=price&order=descending">Price descending</a></li>
-            <li class="divider"></li>
-            <li><a href="?criteria=discount&order=ascending">Discount ascending</a></li>
-            <li><a href="?criteria=discount&order=descending">Discount descending</a></li>
-        </ul>
-    </li>
-</ul>
-<div class="margin-bottom-2"></div>
-<div class="jumbotron">
-    <div class="row">
-        @foreach (var product in Model)
-        {
-            <div class="col-md-3">
-                @Html.DisplayFor(x => product, "ProductListingModel")
-            </div>
-        }
+@if (User.IsInRole(AppConstants.Administrator))
+{
+    <div class="pull-right" >
+        <a asp-area="admin" asp-controller="admins" asp-action="ManageCategory" asp-route-id="@ViewBag.CategoryName" class="btn-lg btn-danger">Manage Category</a>
     </div>
-</div>
+}
+
+@if (Model.Any())
+{
+    <ul class="nav nav-pills">
+        <li class="dropdown active">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">
+                Sort By <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="?criteria=price&order=ascending">Price ascending</a></li>
+                <li><a href="?criteria=price&order=descending">Price descending</a></li>
+                <li class="divider"></li>
+                <li><a href="?criteria=discount&order=ascending">Discount ascending</a></li>
+                <li><a href="?criteria=discount&order=descending">Discount descending</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div class="margin-bottom-2"></div>
+    <div class="jumbotron">
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => product, "ProductListingModel")
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-center">There are no products for category - @ViewBag.CategoryName</p>
+}

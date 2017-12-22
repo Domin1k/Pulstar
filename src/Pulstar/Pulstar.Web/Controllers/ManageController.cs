@@ -1,6 +1,7 @@
 ﻿namespace Pulstar.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
@@ -11,6 +12,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Logging;
+    using Pulstar.Common.Helpers;
     using Pulstar.Data.Models;
     using Pulstar.Services.Interfaces;
     using Pulstar.Web.Models.ManageViewModels;
@@ -54,14 +56,27 @@
             }
 
             var creditCards = await _userService.PaymentMethods(User.Identity.Name);
+            List<SelectListItem> modelCreditCards = null;
+            if (creditCards.Any())
+            {
+                modelCreditCards = creditCards
+                .Select(c => new SelectListItem
+                {
+                    Text = CreditCardHelper.ReplaceCreditCardUI(c.CreditCardNumber),
+                    Value = c.Id.ToString(),
+                })
+                .ToList();
+            }
+
             var model = new IndexViewModel
             {
                 Username = user.UserName,
+                CurrentBalance = user.AccountBalance,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage,
-                CreditCards = creditCards.Select(c => new SelectListItem { Value = c.CreditCardNumber, Text = c.CreditCardNumber }).ToList(),
+                CreditCards = modelCreditCards ?? new List<SelectListItem>(),
             };
 
             return View(model);

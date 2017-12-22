@@ -20,6 +20,8 @@
 
         public string StatusMessage { get; set; }
 
+        public decimal CurrentBalance { get; set; }
+
         public List<SelectListItem> CreditCards { get; set; }
     }
 }

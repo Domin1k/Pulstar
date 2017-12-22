@@ -1,0 +1,14 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Manage Category";
+}
+
+<h2 class="text-center margin-bottom-2">@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-3">
+        <a asp-area="admin" asp-controller="admins" asp-action="EditCagory" asp-route-id="@Model" class="btn btn-warning btn-lg btn-block">Edit Category</a>
+        <a asp-area="admin" asp-controller="admins" asp-action="DeleteCategory" asp-route-id="@Model" class="btn btn-danger btn-lg btn-block">Delete Category</a>
+    </div>
+    
+</div>

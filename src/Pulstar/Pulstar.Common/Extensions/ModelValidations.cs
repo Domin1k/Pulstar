@@ -2,15 +2,25 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
 
     public static class ModelValidations
     {
         public static bool ContainsNullStrings<T>(this T model)
         {
-            return model.GetType().GetProperties()
-                .Where(pi => pi.GetValue(model) is string)
-                .Select(pi => (string)pi.GetValue(model))
-                .Any(value => string.IsNullOrEmpty(value));
+            foreach (PropertyInfo pi in model.GetType().GetProperties())
+            {
+                if (pi.PropertyType == typeof(string))
+                {
+                    string value = (string)pi.GetValue(model);
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public static void ThrowIfNull(this string str)

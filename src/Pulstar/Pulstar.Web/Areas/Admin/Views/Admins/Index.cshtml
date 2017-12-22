@@ -1,5 +1,12 @@
 ﻿@model IEnumerable<ManageUserViewModel>
+@{
+    ViewData["Title"] = "Administration";
+}
 
+<h2 class="text-center">@ViewData["Title"]</h2>
+<div class="pull-right margin-bottom-2">
+    <a asp-area="Admin" asp-controller="Admins" asp-action="AddCategory" class="btn-lg btn-primary">Add Category</a>
+</div>
 
 <table class="table table-striped table-hover">
     <thead>
@@ -20,7 +27,7 @@
                     <select class="roles-selectList" id="@user.UserName" asp-items="@user.Roles" selected="selected"></select>
                 </td>
                 <td>
-                    @Html.Partial("_AddToRole", new AddToRoleModel { UserName = user.UserName, Role = user.Role })
+                    @Html.Partial("_AddToRole", new AddToRoleViewModel { UserName = user.UserName, Role = user.Role })
                 </td>
             </tr>
         }

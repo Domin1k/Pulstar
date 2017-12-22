@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Pulstar.Common.Helpers;
     using Pulstar.Data.Models;
     using Pulstar.Models.Products;
     using Pulstar.Models.Purchase;
@@ -57,7 +58,6 @@
             if (id <= 0)
             {
                 TempData.AddErrorMessage(TempMessages.InvalidProduct);
-                
                 return Ok();
             }
 
@@ -85,8 +85,8 @@
             var creditCards = (await _userService.PaymentMethods(User.Identity.Name))
                 .Select(u => new SelectListItem
                 {
-                    Value = u.CreditCardNumber,
-                    Text = u.CreditCardNumber,
+                    Text = CreditCardHelper.ReplaceCreditCardUI(u.CreditCardNumber),
+                    Value = u.Id.ToString(),
                 })
                 .ToList();
             var cartProducts = await GetCurrentUserCartItems();
@@ -107,6 +107,7 @@
         {
             if (!ModelState.IsValid)
             {
+                TempData.AddErrorMessage(string.Join(Environment.NewLine, ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))));
                 return View(model);
             }
 

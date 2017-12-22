@@ -19,6 +19,6 @@
 
         public byte[] Image { get; set; }
 
-        public decimal PriceAfterDiscount => Price - (Price * (decimal)Discount / 100);
+        public decimal PriceAfterDiscount => Price - (Price * ((decimal)Discount / 100));
     }
 }

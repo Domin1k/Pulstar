@@ -27,7 +27,7 @@
             const string currentUserName = "test-user";
 
             var fakeSession = new Dictionary<string, object>();
-            var controller = Instanciate();
+            var controller = InstanciateWithMocks();
             PrepareController(controller, currentUserName, fakeSession);
             controller.AddToCart(objectIdToAdd);
 
@@ -45,11 +45,11 @@
             var firstUserSession = new Dictionary<string, object>();
             var secondUserSession = new Dictionary<string, object>();
 
-            var firstController = Instanciate();
+            var firstController = InstanciateWithMocks();
             PrepareController(firstController, currentUserName1, firstUserSession);
             firstController.AddToCart(objectIdToAdd1);
 
-            var secondController = Instanciate();
+            var secondController = InstanciateWithMocks();
             PrepareController(secondController, currentUserName2, secondUserSession);
             secondController.AddToCart(objectIdToAdd2);
 
@@ -63,7 +63,7 @@
             const string currentUserName = "test-user";
 
             var fakeSession = new Dictionary<string, object>();
-            var controller = Instanciate();
+            var controller = InstanciateWithMocks();
             PrepareController(controller, currentUserName, fakeSession);
             var products = new Fixture().CreateMany<ProductModel>().ToList();
             var model = new UserCheckoutCartViewModel
@@ -77,7 +77,25 @@
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await controller.Checkout(model));
         }
 
-        private UsersController Instanciate()
+        [Fact]
+        public void Deposit_WithValidInput_ShouldIncrementUserAccountBalance()
+        {
+            const string currentUserName = "test-user";
+
+            var fakeSession = new Dictionary<string, object>();
+            var controller = InstanciateWithMocks();
+            PrepareController(controller, currentUserName, fakeSession);
+            var products = new Fixture().CreateMany<ProductModel>().ToList();
+            var model = new UserCheckoutCartViewModel
+            {
+                CartProducts = products,
+                CreditCardId = "4485504638364536",
+                TotalCost = products.Sum(p => p.Price),
+                Address = "Test adress",
+            };
+        }
+
+        private UsersController InstanciateWithMocks()
         {
             var productServiceMock = new Mock<IProductService>().Object;
             var userAccountServiceMock = new Mock<IUserAccountService>().Object;
@@ -89,7 +107,7 @@
             controller.TempData = tempDataMock.Object;
             return controller;
         }
-
+        
         private void PrepareController(UsersController userController, string userName, Dictionary<string, object> fakeSession)
         {
             var mockSession = GetSession();

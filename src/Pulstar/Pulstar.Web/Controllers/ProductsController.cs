@@ -110,14 +110,16 @@
         {
             if (id <= 0)
             {
-                return BadRequest();
+                TempData.AddErrorMessage(TempMessages.InvalidProduct);
+                return Ok();
             }
 
             var model = await _productService.ViewDetails(id);
 
             if (model == null)
             {
-                return NotFound();
+                TempData.AddErrorMessage(TempMessages.InvalidProduct);
+                return Ok();
             }
 
             var viewModel = Mapper.Map<ProductViewModel>(model);
