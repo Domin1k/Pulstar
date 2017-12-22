@@ -37,8 +37,4 @@
     <ProjectReference Include="..\Pulstar.Services\Pulstar.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Views\Shared\" />
-  </ItemGroup>
-
 </Project>

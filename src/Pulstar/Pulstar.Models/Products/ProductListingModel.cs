@@ -13,6 +13,8 @@
 
         public double Discount { get; set; }
 
+        public int CategoryId { get; set; }
+
         public string Model { get; set; }
 
         public byte[] Image { get; set; }

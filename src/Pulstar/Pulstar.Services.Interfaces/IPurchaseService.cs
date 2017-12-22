@@ -6,7 +6,7 @@
 
     public interface IPurchaseService
     {
-        Task AddPurchase(IEnumerable<PurchaseProduct> purchaseProducts, string userName);
+        Task AddPurchase(IEnumerable<PurchaseProduct> purchaseProducts, string userName, string deliveryAddress);
 
         Task<IEnumerable<PurchaseListingModel>> Products(string userName);
     }

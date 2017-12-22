@@ -26,8 +26,13 @@
             _userAccountService = userAccountService;
         }
 
-        public async Task AddPurchase(IEnumerable<PurchaseProduct> purchaseProducts, string userName)
+        public async Task AddPurchase(IEnumerable<PurchaseProduct> purchaseProducts, string userName, string deliveryAddress)
         {
+            if (string.IsNullOrEmpty(deliveryAddress))
+            {
+                throw new InvalidOperationException($"Address is required!");
+            }
+
             var user = await _userManager.FindByNameAsync(userName);
             var productIds = purchaseProducts.Select(p => p.Id).ToList();
             var productsToBuy = await _pulstarDb.Products
@@ -35,6 +40,11 @@
                 .ToListAsync();
 
             var purchaseAmount = 0m;
+
+            if (productsToBuy.Count != productIds.Count)
+            {
+                throw new InvalidOperationException("Products are missing or invalid in the database!");
+            }
 
             // TODO extract to extension method
             foreach (var dbproduct in productsToBuy)
@@ -54,6 +64,8 @@
                 Amount = purchaseAmount,
                 Products = productsToBuy,
                 UserId = user.Id,
+                User = user,
+                DeliveryAddress = deliveryAddress,
                 Date = DateTime.UtcNow,
             };
 

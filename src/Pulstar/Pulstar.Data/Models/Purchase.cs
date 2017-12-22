@@ -15,6 +15,8 @@
 
         public User User { get; set; }
 
+        public string DeliveryAddress { get; set; }
+
         public decimal Amount { get; set; }
     }
 }

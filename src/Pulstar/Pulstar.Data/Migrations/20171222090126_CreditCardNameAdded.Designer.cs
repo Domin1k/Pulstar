@@ -12,9 +12,10 @@ using System;
 namespace Pulstar.Data.Migrations
 {
     [DbContext(typeof(PulstarDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171222090126_CreditCardNameAdded")]
+    partial class CreditCardNameAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

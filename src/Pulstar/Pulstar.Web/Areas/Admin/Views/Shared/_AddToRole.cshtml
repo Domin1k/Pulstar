@@ -1,0 +1,7 @@
+﻿@model AddToRoleModel
+
+<form action="/admin/admins/manage" method="post">
+    <input type="hidden" name="userName" value="@Model.UserName" />
+    <input type="hidden" class="role-input" name="role" value="@Model.Role" />
+    <input type="submit" class="btn btn-warning" value="Add To Role" />
+</form>

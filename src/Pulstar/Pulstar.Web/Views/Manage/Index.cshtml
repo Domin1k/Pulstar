@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-md-6">
         <p>My Credit Cards</p>
-        @if (Model.CreditCards.Any())
+        @if (Model?.CreditCards.Any() ?? false)
         {
             <select asp-items="Model.CreditCards" class="form-control"></select>
         }
@@ -17,7 +17,7 @@
         {
             <em>You don't have any credits cards added.</em>
         }
-        <form method="post">
+        <form method="post" action="/Manage/Index">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Username"></label>
@@ -25,18 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Email"></label>
-                @if (Model.IsEmailConfirmed)
-                {
-                    <div class="input-group">
-                        <input asp-for="Email" class="form-control" />
-                        <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
-                    </div>
-                }
-                else
-                {
-                    <input asp-for="Email" class="form-control" />
-                    <button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
-                }
+                <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">

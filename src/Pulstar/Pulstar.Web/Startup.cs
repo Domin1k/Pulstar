@@ -5,19 +5,20 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Pulstar.Common;
     using Pulstar.Data;
     using Pulstar.Data.Extensions;
     using Pulstar.Data.Models;
     using Pulstar.Services;
     using Pulstar.Services.Interfaces;
-    using Pulstar.Web.Services;
 
     public class Startup
     {
+        private const string DefaultImagePath = "{0}\\wwwroot\\images\\defaultImg.jpg";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,15 +43,18 @@
                 .AddDefaultTokenProviders();
 
             services.AddAutoMapper();
-
-            services.AddTransient<IEmailSender, EmailSender>();
+            
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IPurchaseService, PurchaseService>();
             services.AddTransient<IUserAccountService, UserAccountService>();
             services.AddTransient<IUserService, UserService>();
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+            });
+
             services.AddSession();
         }
 
@@ -62,37 +66,16 @@
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
 
-                // TODO
-                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    var context = serviceScope.ServiceProvider.GetService<PulstarDbContext>();
-                    context.Database.Migrate();
-
-                    Task.Run(async () =>
-                            {
-                                await context.EnsureSeedCategories();
-                                await context.EnsureSeedGames($"{env.ContentRootPath}\\wwwroot\\images\\defaultImg.jpg");
-                            })
-                        .GetAwaiter()
-                        .GetResult();
-
-                    var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
-                    var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-
-                    Task.Run(async () => await roleManager.EnsureSeedDefaultUserWithRolesData(userManager))
-                        .GetAwaiter()
-                        .GetResult();
-                }
+                ConfigureInitialServiceSetup(app, env);
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
-
-            app.UseAuthentication();
-            app.UseSession();
+            app.UseStaticFiles()
+               .UseAuthentication()
+               .UseSession();
 
             app.UseMvc(routes =>
             {
@@ -104,6 +87,33 @@
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void ConfigureInitialServiceSetup(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<PulstarDbContext>();
+                context.Database.Migrate();
+
+                if (env.IsDevelopment())
+                {
+                    Task.Run(async () =>
+                    {
+                        await context.EnsureSeedCategories();
+                        await context.EnsureSeedGames(string.Format(DefaultImagePath, env.ContentRootPath));
+                    })
+                    .GetAwaiter()
+                    .GetResult();
+
+                    var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
+                    var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+
+                    Task.Run(async () => await roleManager.EnsureSeedDefaultUserWithRolesData(userManager))
+                        .GetAwaiter()
+                        .GetResult();
+                }
+            }
         }
     }
 }

@@ -12,9 +12,10 @@ using System;
 namespace Pulstar.Data.Migrations
 {
     [DbContext(typeof(PulstarDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171221172343_PurchaseColumn")]
+    partial class PurchaseColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,9 +159,6 @@ namespace Pulstar.Data.Migrations
                     b.Property<string>("CVV")
                         .IsRequired()
                         .HasMaxLength(4);
-
-                    b.Property<string>("CardHolderName")
-                        .IsRequired();
 
                     b.Property<short>("CardType");
 

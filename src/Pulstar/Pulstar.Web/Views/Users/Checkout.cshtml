@@ -10,19 +10,30 @@
     <div class="row">
         <div class="col-md-10">
             <form method="post">
-                <h4>Create a new account.</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Address"></label>
-                    <input asp-for="Address" class="form-control" />
-                    <span asp-validation-for="Address" class="text-danger"></span>
+               
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4 class="text-center margin-bottom-2">Delivery&Payment information</h4>
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="form-group">
+                                <label asp-for="Address"></label>
+                                <input asp-for="Address" class="form-control" />
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PhoneNumber"></label>
+                                <input asp-for="PhoneNumber" class="form-control" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="CreditCardId"></label>
+                                <select class="form-control" asp-for="@Model.CreditCardId" asp-items="@Model.CreditCards" selected="selected"></select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <select class="form-control" asp-for="@Model.CreditCardId" asp-items="@Model.CreditCards" selected="selected"></select>
-                </div>
-
                 <table class="table table-striped table-hover ">
                     <thead>
                         <tr>

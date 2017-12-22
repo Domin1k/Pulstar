@@ -19,6 +19,9 @@
 
         public bool IsActive { get; set; }
 
+        [Required]
+        public string CardHolderName { get; set; }
+
         public DateTime ExpirationDate { get; set; }
 
         public CreditCardType CardType { get; set; }

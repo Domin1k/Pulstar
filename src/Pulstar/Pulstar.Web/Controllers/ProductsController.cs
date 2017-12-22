@@ -11,6 +11,7 @@
     using Pulstar.Data.Models;
     using Pulstar.Models.Products;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Web.Infrastructure.Constants;
     using Pulstar.Web.Infrastructure.Extensions;
     using Pulstar.Web.Models.ProductsViewModels;
 
@@ -37,7 +38,7 @@
                 products = await GetProducts(game, expression, orderType);
                 if (products == null)
                 {
-                    TempData.AddErrorMessage($"There are no products for {game}");
+                    TempData.AddErrorMessage(string.Format(TempMessages.NoProductsError, game));
                 }
             }
             catch (InvalidOperationException ex)
@@ -63,7 +64,7 @@
                 products = await GetProducts(console, expression, orderType);
                 if (products == null)
                 {
-                    TempData.AddErrorMessage($"There are no products for {console}");
+                    TempData.AddErrorMessage(string.Format(TempMessages.NoProductsError, console));
                 }
             }
             catch (InvalidOperationException ex)
@@ -89,7 +90,7 @@
                 products = await GetProducts(accessory, expression, orderType);
                 if (products == null)
                 {
-                    TempData.AddErrorMessage($"There are no products for {accessory}");
+                    TempData.AddErrorMessage(string.Format(TempMessages.NoProductsError, accessory));
                 }
             }
             catch (InvalidOperationException ex)

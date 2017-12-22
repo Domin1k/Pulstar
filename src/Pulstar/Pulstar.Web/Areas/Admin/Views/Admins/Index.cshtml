@@ -13,24 +13,27 @@
     <tbody>
         @foreach (var user in Model)
         {
-            <tr >
+            <tr>
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
                 <td>
-                    <select asp-for="@user.Role" asp-items="@user.Roles" selected="selected"></select>
+                    <select class="roles-selectList" id="@user.UserName" asp-items="@user.Roles" selected="selected"></select>
                 </td>
                 <td>
-                <a 
-                   class="btn btn-warning"
-                   asp-area="Admin"
-                   asp-controller="Admins"
-                   asp-action="Manage"
-                   asp-route-userName="@user.UserName"
-                   asp-route-role="@user.Role">
-                    Add To Role
-                    </a>
+                    @Html.Partial("_AddToRole", new AddToRoleModel { UserName = user.UserName, Role = user.Role })
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+<script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".roles-selectList").change(function () {
+                $(".role-input").val($(this).find("option:selected").text());
+            })
+        })
+    </script>
+}

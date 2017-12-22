@@ -1,6 +1,7 @@
 ﻿namespace Pulstar.Web.Models.UsersViewModels
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Pulstar.Models.Products;
@@ -12,8 +13,13 @@
         public decimal TotalCost { get; set; }
 
         [Required]
+        public string PhoneNumber { get; set; }
+
+        [DisplayName("Delivery Address")]
+        [Required]
         public string Address { get; set; }
 
+        [DisplayName("Credit Card")]
         [Required(ErrorMessage = "Credit card is mandatory!")]
         public string CreditCardId { get; set; }
 

@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Pulstar.Common.Constants;
+    using Pulstar.Common.Extensions;
     using Pulstar.Common.Helpers;
     using Pulstar.Data;
     using Pulstar.Data.Models;
@@ -30,9 +31,12 @@
             _roleManager = roleManager;
         }
 
-        public async Task AddPaymentMethod(string userName, string creditCardNumber, string cvv, DateTime expirationDate)
+        public async Task AddPaymentMethod(string userName, string creditCardNumber, string cvv, string cardHolder, DateTime expirationDate)
         {
-            if (string.IsNullOrEmpty(creditCardNumber) || string.IsNullOrEmpty(cvv) || expirationDate < DateTime.UtcNow)
+            creditCardNumber.ThrowIfNull();
+            cvv.ThrowIfNull();
+            cardHolder.ThrowIfNull();
+            if (expirationDate < DateTime.UtcNow)
             {
                 throw new InvalidOperationException($"Invalid user input! {nameof(creditCardNumber)} must be a valid CC number, {nameof(cvv)} must be valid CVV and {nameof(expirationDate)} must NOT be past date.");
             }
@@ -53,6 +57,7 @@
                 CVV = cvv,
                 IsActive = true,
                 ExpirationDate = expirationDate,
+                CardHolderName = cardHolder,
                 OwnerId = user.Id,
             };
             user.CreditCards.Add(creditCard);

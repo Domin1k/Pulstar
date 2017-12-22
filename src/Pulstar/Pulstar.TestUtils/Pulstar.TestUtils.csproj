@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\StylecopRules.ruleset</CodeAnalysisRuleSet>
+    <Version>1.0.2</Version>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\stylecop.json" Link="stylecop.json">
+      <Pack>false</Pack>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.7.145" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pulstar.Models\Pulstar.Models.csproj" />
+  </ItemGroup>
+</Project>

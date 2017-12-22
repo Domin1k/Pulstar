@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -11,8 +10,6 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
     using Pulstar.Common.Constants;
-    using Pulstar.Common.Enums;
-    using Pulstar.Common.Helpers;
     using Pulstar.Models.Products;
     using Pulstar.Services.Interfaces;
     using Pulstar.Web.Areas.Admin.Models.Users;
@@ -25,6 +22,8 @@
     [Authorize(Roles = AppConstants.Administrator + "," + AppConstants.Manager)]
     public class AdminsController : Controller
     {
+        private const string ProductDetails = "/products/details/{0}";
+        private const string AdminController = "Admins";
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserService _userService;
         private readonly IProductService _productService;
@@ -55,9 +54,16 @@
         [HttpPost]
         public async Task<IActionResult> EditProduct(ProductViewModel input, IFormFile image)
         {
+            if (image.Length > AppConstants.MaximumImageSizeInBytesAllowed)
+            {
+                TempData.AddErrorMessage(string.Format(TempMessages.MaximumImageSizeExceeded, AppConstants.MaximumImageSizeInBytesAllowed));
+                return Redirect(string.Format(ProductDetails, input.Id));
+            }
+
             if (!ModelState.IsValid)
             {
-                TempData.AddErrorMessage("Some of the inputs contain invalid data.");
+                TempData.AddErrorMessage(TempMessages.GeneralInvalidInputData);
+                return Redirect(string.Format(ProductDetails, input.Id));
             }
 
             var productModel = new ProductModel
@@ -74,7 +80,7 @@
 
             await _productService.EditProduct(input.Id, productModel, byteImage);
 
-            return Redirect($"/products/details/{input.Id}");
+            return Redirect(string.Format(ProductDetails, input.Id));
         }
 
         [HttpPost]
@@ -82,33 +88,36 @@
         {
             if (!ModelState.IsValid)
             {
-                TempData.AddErrorMessage("Some of the inputs contain invalid data.");
+                TempData.AddErrorMessage(TempMessages.GeneralInvalidInputData);
+                return Redirect(string.Format(ProductDetails, model.ProductId));
             }
 
             try
             {
                 await _productService.AddDiscount(model.ProductId, model.Discount);
             }
-            catch (Exception)
+            catch (InvalidOperationException)
             {
-                TempData.AddErrorMessage("Discount must be in range [1..99] and product must be existing.");
-                throw;
+                TempData.AddErrorMessage(TempMessages.InvalidDiscount);
             }
 
-            return Redirect($"/products/details/{model.ProductId}");
+            return Redirect(string.Format(ProductDetails, model.ProductId));
         }
 
         [Authorize(Roles = AppConstants.Administrator)]
-        public async Task<IActionResult> Manage(string userName, string role)
+        [HttpPost]
+        public async Task<IActionResult> Manage(AddToRoleModel model)
         {
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(role))
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                TempData.AddErrorMessage(TempMessages.GeneralInvalidInputData);
             }
+            else
+            {
+                await _userService.AssignToRole(model.UserName, model.Role);
+            }            
 
-            await _userService.AssignToRole(userName, role);
-
-            return View();
+            return RedirectToAction(nameof(AdminsController.Index), AdminController);
         }
     }
 }
