@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Pulstar.Common.Helpers;
     using Pulstar.Data.Models;
     using Pulstar.TestUtils;
     using Xunit;
@@ -13,6 +14,7 @@
 
         public UserServiceTests()
         {
+            Db = GetDatabase();
             _userService = new UserService(Db, UserManagerMock.New.Object, null);
         }
 
@@ -35,7 +37,7 @@
             var userAfterAddPaymentMethod = Db.Users.First(u => u.UserName == user.UserName);
 
             Assert.Single(userAfterAddPaymentMethod.CreditCards);
-            Assert.Equal(CCNumber, userAfterAddPaymentMethod.CreditCards.First().CreditCardNumber);
+            Assert.Equal(CreditCardHelper.Encrypt(CCNumber), userAfterAddPaymentMethod.CreditCards.First().CreditCardNumber);
             Assert.Equal(Cvv, userAfterAddPaymentMethod.CreditCards.First().CVV);
         }
     }

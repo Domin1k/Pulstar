@@ -74,7 +74,8 @@
         {
             var product = await GenerateValidProduct();
             var category = Db.Categories.FirstOrDefault(c => c.Name == DefaultCategoryName);
-
+            Db.Products.Add(new Product { CategoryId = category.Id });
+            await Db.SaveChangesAsync();
             var products = await _productService.All(category.Name, p => p.Id, Common.Enums.OrderType.Descending);
 
             Assert.NotEmpty(products);
@@ -82,28 +83,34 @@
         }
 
         [Fact]
-        public async Task All_WithNonExistingCategory_ShouldReturnEmptyList()
+        public async Task All_WithNonExistingCategory_ShouldThrow()
         {
             var product = await GenerateValidProduct();
 
-            var products = await _productService.All("non-existing-category", p => p.Id, Common.Enums.OrderType.Descending);
-
-            Assert.Empty(products);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _productService.All("non-existing-category", p => p.Id, Common.Enums.OrderType.Descending));
         }
 
         [Fact]
         public async Task EditProduct_WithValidData_ShouldEditProductCorrectly()
         {
-            var editProduct = new Fixture().Create<ProductModel>();
             var product = await GenerateValidProduct();
-             
-            product.Price = editProduct.Price;
-            product.Quantity = editProduct.Quantity;
-            product.Title = editProduct.Title;
-            product.Model = editProduct.Model;
-            product.Manufacturer = editProduct.Manufacturer;
-            product.Discount = editProduct.Discount;
-            product.Description = editProduct.Description;
+            var editProduct = new ProductModel();
+            editProduct.Price = 10;
+            editProduct.Quantity = 10;
+            editProduct.Title = "Title";
+            editProduct.Model = "EditedModel";
+            editProduct.Manufacturer = "EditedManufacturer";
+            editProduct.Discount = 0;
+            editProduct.Description = "EditedDescription";
+            editProduct.Image = new byte[100];
+
+            product.Price = product.Price;
+            product.Quantity = product.Quantity;
+            product.Title = product.Title;
+            product.Model = product.Model;
+            product.Manufacturer = product.Manufacturer;
+            product.Discount = product.Discount;
+            product.Description = product.Description;
             product.Image = new byte[1024];
 
             Assert.NotEqual(product.Price, editProduct.Price);

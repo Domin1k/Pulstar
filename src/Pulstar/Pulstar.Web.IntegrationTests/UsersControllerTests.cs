@@ -74,7 +74,7 @@
                 Address = "Test adress",
             };
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await controller.Checkout(model));
+            await controller.Checkout(model);
         }
 
         [Fact]

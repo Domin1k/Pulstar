@@ -15,16 +15,12 @@
         protected const string DefaultCategoryName = "test-category";
         private static bool _testsInitialized = false;
 
-        protected PulstarDbContext Db { get; set; }
-
-        public static void Initialize()
+        static BaseTest()
         {
-            if (!_testsInitialized)
-            {
-                Mapper.Initialize(config => config.AddProfile<AutoMapperProfile>());
-                _testsInitialized = true;
-            }
+            Mapper.Initialize(config => config.AddProfile<AutoMapperProfile>());
         }
+
+        protected PulstarDbContext Db { get; set; }
 
         public void Dispose()
         {
