@@ -15,7 +15,7 @@
     using Pulstar.Web.Infrastructure.Extensions;
     using Pulstar.Web.Models.ProductsViewModels;
 
-    [Route("products")]
+    [Route(RouteConstants.ProductsController)]
     public class ProductsController : Controller
     {
         private const string ProductsViewName = "Products";
@@ -27,7 +27,7 @@
             _productService = productService;
         }
 
-        [HttpGet("games/{game}/{criteria?}/{order?}")]
+        [HttpGet(RouteConstants.Games)]
         public async Task<IActionResult> Games(string game, string criteria, string order)
         {
             IEnumerable<ProductListingModel> products = null;
@@ -53,7 +53,7 @@
             return View(ProductsViewName, products ?? Enumerable.Empty<ProductListingModel>());
         }
 
-        [HttpGet("consoles/{console}/{criteria?}/{order?}")]
+        [HttpGet(RouteConstants.Consoles)]
         public async Task<IActionResult> Consoles(string console, string criteria, string order)
         {
             IEnumerable<ProductListingModel> products = null;
@@ -79,7 +79,7 @@
             return View(ProductsViewName, products ?? Enumerable.Empty<ProductListingModel>());
         }
 
-        [HttpGet("accessories/{accessory}/{criteria?}/{order?}")]
+        [HttpGet(RouteConstants.Accessories)]
         public async Task<IActionResult> Accessories(string accessory, string criteria, string order)
         {
             IEnumerable<ProductListingModel> products = null;
@@ -105,13 +105,13 @@
             return View(ProductsViewName, products ?? Enumerable.Empty<ProductListingModel>());
         }
 
-        [HttpGet("details/{id}")]
+        [HttpGet(RouteConstants.ProductsDetails)]
         public async Task<IActionResult> Details(int id)
         {
             if (id <= 0)
             {
                 TempData.AddErrorMessage(TempMessages.InvalidProduct);
-                return Ok();
+                return RedirectToAction(nameof(HomeController.Index));
             }
 
             var model = await _productService.ViewDetails(id);
@@ -119,7 +119,7 @@
             if (model == null)
             {
                 TempData.AddErrorMessage(TempMessages.InvalidProduct);
-                return Ok();
+                return RedirectToAction(nameof(HomeController.Index));
             }
 
             var viewModel = Mapper.Map<ProductViewModel>(model);

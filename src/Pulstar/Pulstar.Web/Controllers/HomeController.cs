@@ -17,7 +17,7 @@
             _productService = productService;
         }
 
-        [HttpGet("{searchTerm?}")]
+        [HttpGet(RouteConstants.SearchTerm)]
         public async Task<IActionResult> Index(string searchTerm)
         {
             var products = string.IsNullOrEmpty(searchTerm)

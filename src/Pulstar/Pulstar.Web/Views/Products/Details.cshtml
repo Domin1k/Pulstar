@@ -22,7 +22,10 @@
                     @Model.Description
                 </div>
             </div>
-            <a asp-area="" asp-controller="Users" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-success">Add To Cart</a>
+            @if (Model.Quantity > 0)
+            {
+                <a asp-area="" asp-controller="Users" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-success">Add To Cart</a>
+            }
         </div>
     </div>
     <hr />

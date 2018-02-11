@@ -22,6 +22,8 @@
 
         Task EditProduct(int productId, ProductModel product, byte[] image);
 
+        Task DeleteProduct(int productId);
+
         Task AddDiscount(int productId, double discount);
 
         Task<(string category, CategoryType categoryType)> GetCategory(int productId);

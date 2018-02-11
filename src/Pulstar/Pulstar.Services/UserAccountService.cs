@@ -1,6 +1,7 @@
 ﻿namespace Pulstar.Services
 {
     using System;
+    using Pulstar.Common.Constants;
     using Pulstar.Data;
     using Pulstar.Data.Models;
     using Pulstar.Services.Interfaces;
@@ -21,7 +22,7 @@
             {
                 if (funds <= 0)
                 {
-                    throw new InvalidOperationException($"Funds must be equal or greater than zero.");
+                    throw new InvalidOperationException(ServiceErrorsConstants.InvalidFunds);
                 }
 
                 user.AccountBalance += funds;
@@ -45,7 +46,7 @@
             {
                 if (funds <= 0)
                 {
-                    throw new InvalidOperationException($"Funds must be equal or greater than zero.");
+                    throw new InvalidOperationException(ServiceErrorsConstants.InvalidFunds);
                 }
 
                 user.AccountBalance -= funds;

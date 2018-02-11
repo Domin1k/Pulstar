@@ -4,6 +4,7 @@
 @if (User.IsInRole(AppConstants.Administrator))
 {
     <div class="row">
+        <div class="clearfix"></div>
         <div class="col-md-6">
             <form method="post" asp-area="@WebContants.AdminArea" asp-controller="Admins" asp-action="EditProduct" class="form-horizontal" enctype="multipart/form-data">
                 <input asp-for="@Model.Id" type="hidden" />
@@ -47,6 +48,7 @@
                     <input name="image" type="file" accept="image/*" required class="form-control" />
                 </div>
                 <input type="submit" value="Edit Product" class="btn btn-warning" />
+                <a asp-area="Admin" asp-controller="Admins" asp-action="DeleteProduct" asp-route-id="@Model.Id" class="btn btn-danger">Delete Product</a>
             </form>
         </div>
     </div>

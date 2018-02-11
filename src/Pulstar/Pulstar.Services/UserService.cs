@@ -38,7 +38,7 @@
             cardHolder.ThrowIfNull();
             if (expirationDate < DateTime.UtcNow)
             {
-                throw new InvalidOperationException($"Invalid user input! {nameof(creditCardNumber)} must be a valid CC number, {nameof(cvv)} must be valid CVV and {nameof(expirationDate)} must NOT be past date.");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.InvalidUserInput, nameof(creditCardNumber), nameof(cvv), nameof(expirationDate)));
             }
             
             var creditCardType = CreditCardHelper.GetCreditCardType(creditCardNumber);
@@ -47,7 +47,7 @@
 
             if (user.CreditCards.Any(cc => cc.CreditCardNumber == creditCardNumber && cc.CVV == cvv && cc.ExpirationDate == expirationDate))
             {
-                throw new InvalidOperationException($"User already has this CC added.");
+                throw new InvalidOperationException(ServiceErrorsConstants.InvalidUserCC);
             }
 
             var creditCard = new CreditCard
@@ -81,13 +81,13 @@
 
             if (user == null || role == null)
             {
-                throw new InvalidOperationException($"{userName}/{role} does not exists!");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.UserNameOrRoleNotExists, userName, role));
             }
 
             var result = await _userManager.AddToRoleAsync(user, roleName);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Add to {roleName} for {userName} failed.");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.AddToRoleFailed, roleName, userName));
             }
         }
         
@@ -95,14 +95,14 @@
         {
             if (amountToDeposit <= 0)
             {
-                throw new InvalidOperationException($"{nameof(amountToDeposit)} cannot be less or equal to 0.");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.InvalidDeposit, nameof(amountToDeposit)));
             }
 
             var user = await _dbContext.Users.Where(u => u.UserName == userName).Include(u => u.CreditCards).FirstOrDefaultAsync();
 
             if (!user.CreditCards.Any(c => c.IsActive))
             {
-                throw new InvalidOperationException($"{user.UserName} does not have any payment methods available. Please add payment method and try again.");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.UserDoesNotHaveAnyPaymentMethods, user.UserName));
             }
 
             userAccountService.Deposit(user, amountToDeposit);
@@ -127,7 +127,7 @@
 
             if (user == null)
             {
-                throw new InvalidOperationException($"User {userName} does not exists");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.UserNameNotFound, userName));
             }
 
             return user;

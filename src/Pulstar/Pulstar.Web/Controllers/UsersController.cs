@@ -58,7 +58,7 @@
             if (id <= 0)
             {
                 TempData.AddErrorMessage(TempMessages.InvalidProduct);
-                return Ok();
+                return RedirectToAction(nameof(UsersController.Cart));
             }
 
             var cartItems = new List<int>() { id };

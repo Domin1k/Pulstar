@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
+    using Pulstar.Common.Constants;
     using Pulstar.Common.Enums;
     using Pulstar.Common.Extensions;
     using Pulstar.Data;
@@ -25,7 +26,11 @@
         public async Task AddCategory(string name, CategoryType catType)
         {
             name.ThrowIfNull();
-            await RetrieveOrThrow(name);
+            var categoryExists = await _dbContext.Categories.AnyAsync(c => c.Name.ToLower() == name.ToLower());
+            if (categoryExists)
+            {
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.CategoryExists, name));
+            }
 
             var category = new Category
             {
@@ -73,7 +78,7 @@
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
             if (category == null)
             {
-                throw new InvalidOperationException($"Category {name} already exists!");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.CategoryExists, name));
             }
 
             return category;

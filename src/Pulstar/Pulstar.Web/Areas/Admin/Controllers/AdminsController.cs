@@ -26,6 +26,7 @@
     {
         private const string ProductDetails = "/products/details/{0}";
         private const string AdminController = "Admins";
+        private const string Home = "/";
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserService _userService;
         private readonly IProductService _productService;
@@ -104,12 +105,14 @@
 
             TempData.AddSuccessMessage(string.Format(TempMessages.AddedCategorySuccess, model.Name));
 
-            return Redirect("/");
+            return Redirect(Home);
         }
 
+        [Authorize(Roles = AppConstants.Administrator)]
         public IActionResult DeleteCategory(string id) => View(new ManageCategoryViewModel { Name = id });
 
         [HttpPost]
+        [Authorize(Roles = AppConstants.Administrator)]
         public async Task<IActionResult> DeleteCategory(ManageCategoryViewModel model)
         {
             if (!ModelState.IsValid)
@@ -136,6 +139,28 @@
         {
             // TODO
             return RedirectToAction(nameof(AdminsController.Index), AdminController);
+        }
+
+        [Authorize(Roles = AppConstants.Administrator)]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            if (id <= 0)
+            {
+                TempData.AddErrorMessage(TempMessages.GeneralInvalidInputData);
+                return Redirect(string.Format(ProductDetails, id));
+            }
+
+            try
+            {
+                await _productService.DeleteProduct(id);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData.AddErrorMessage(ex.Message);
+                return Redirect(string.Format(ProductDetails, id));
+            }
+
+            return Redirect(Home);
         }
 
         [HttpPost]

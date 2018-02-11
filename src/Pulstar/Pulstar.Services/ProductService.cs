@@ -8,6 +8,7 @@
     using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Pulstar.Common.Constants;
     using Pulstar.Common.Enums;
     using Pulstar.Common.Extensions;
     using Pulstar.Data;
@@ -30,7 +31,7 @@
         {
             if (discount <= 0 || discount >= 100)
             {
-                throw new InvalidOperationException($"Discount must be in range [1...99]");
+                throw new InvalidOperationException(ServiceErrorsConstants.InvalidDiscountRange);
             }
 
             var product = await RetrieveProductOrThrow(productId);
@@ -44,12 +45,12 @@
         {
             if (product.ContainsNullStrings())
             {
-                throw new InvalidOperationException("Required fields are missing");
+                throw new InvalidOperationException(ServiceErrorsConstants.RequiredFields);
             }
 
             if (!_context.Categories.Any(c => c.Id == product.CategoryId))
             {
-                throw new InvalidOperationException($"Category with id {product.CategoryId} does not exist.");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.CategoryDoesNotExist, product.CategoryId));
             }
 
             var dbEntity = new Product
@@ -73,12 +74,12 @@
 
             if (categoryEntity == null)
             {
-                throw new InvalidOperationException($"Category {category} does not exists.");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.CategoryDoesNotExist, category));
             }
 
             var products = _context
                 .Products
-                .Where(p => p.CategoryId == categoryEntity.Id)
+                .Where(p => p.CategoryId == categoryEntity.Id && !p.IsDeleted)
                 .AsQueryable();
 
             return await ListProducts(products, orderPredicate, orderType);
@@ -88,6 +89,7 @@
         {
             var products = _context
                 .Products
+                .Where(p => !p.IsDeleted)
                 .AsQueryable();
             if (wherePredicate != null)
             {
@@ -125,7 +127,7 @@
 
             if (dbProduct == null)
             {
-                throw new InvalidOperationException($"Product does not exists.");
+                throw new InvalidOperationException(ServiceErrorsConstants.ProductDoesNotExist);
             }
 
             return (category: dbProduct.Category.Name, categoryType: dbProduct.Category.Type);
@@ -145,16 +147,26 @@
         {
             return await _context
                 .Products
-                .Where(p => p.Id == id)
+                .Where(p => p.Id == id && !p.IsDeleted)
                 .ProjectTo<ProductDetailsModel>()
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task DeleteProduct(int productId)
+        {
+            var product = await RetrieveProductOrThrow(productId);
+
+            product.IsDeleted = true;
+            product.DeletedOn = DateTime.UtcNow;
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
         }
 
         private async Task<Product> RetrieveProductOrThrow(int productId)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
 
-            return product ?? throw new InvalidOperationException($"Product with id {productId} does not exists!");
+            return product ?? throw new InvalidOperationException(string.Format(ServiceErrorsConstants.ProductIdDoesNotExist, productId));
         }
 
         private async Task<IEnumerable<ProductListingModel>> ListProducts(IQueryable<Product> products, Expression<Func<Product, object>> orderPredicate, OrderType orderType)

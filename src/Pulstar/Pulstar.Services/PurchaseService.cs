@@ -7,6 +7,7 @@
     using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Pulstar.Common.Constants;
     using Pulstar.Data;
     using Pulstar.Data.Extensions;
     using Pulstar.Data.Models;
@@ -30,7 +31,7 @@
         {
             if (string.IsNullOrEmpty(deliveryAddress))
             {
-                throw new InvalidOperationException($"Address is required!");
+                throw new InvalidOperationException(ServiceErrorsConstants.AddressRequired);
             }
 
             var user = await _userManager.FindByNameAsync(userName);
@@ -43,7 +44,7 @@
 
             if (productsToBuy.Count != productIds.Count)
             {
-                throw new InvalidOperationException("Products are missing or invalid in the database!");
+                throw new InvalidOperationException(ServiceErrorsConstants.InvalidOrMissingProduct);
             }
 
             // TODO extract to extension method
@@ -53,7 +54,7 @@
                 var productFromCartPrice = purchaseProducts.Where(p => p.Id == dbproduct.Id).Select(p => p.PriceAfterDiscount).FirstOrDefault();
                 if (productFromCartPrice != dbProductPrice)
                 {
-                    throw new InvalidOperationException("There is mismatch between cart products prices and real product prices!");
+                    throw new InvalidOperationException(ServiceErrorsConstants.ProductCartPriceMismatch);
                 }
 
                 purchaseAmount += productFromCartPrice;
@@ -73,7 +74,7 @@
             
             if (!_userAccountService.HasEnoughFunds(user, purchaseAmount))
             {
-                throw new InvalidOperationException($"User {userName} does not have enough funds to perform this purchase.");
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.UserInsufficientFunds, userName));
             }
 
             _userAccountService.Withdraw(user, purchaseAmount);
@@ -88,7 +89,7 @@
         {
             if (string.IsNullOrEmpty(userName))
             {
-                throw new InvalidOperationException("User not found!");
+                throw new InvalidOperationException(ServiceErrorsConstants.UserNotFound);
             }
 
             var products = await _pulstarDb
