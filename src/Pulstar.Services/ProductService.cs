@@ -13,8 +13,8 @@
     using Pulstar.Common.Extensions;
     using Pulstar.Data.Interfaces;
     using Pulstar.DataModels;
-    using Pulstar.Models.Products;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Services.Models.Products;
 
     public class ProductService : IProductService
     {
@@ -39,7 +39,8 @@
             var product = await RetrieveProductOrThrow(productId);
 
             product.Discount = discount;
-            await _productRepository.UpdateAsync(product);
+            _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync();
         }
 
         public async Task AddProduct(ProductModel product)
@@ -63,9 +64,13 @@
                 Description = product.Description,
                 Quantity = product.Quantity,
                 Price = product.Price,
+                Discount = product.Discount,
+                PurchaseId = 1,
             };
 
-            await _productRepository.AddAsync(dbEntity);
+            _productRepository.Add(dbEntity);
+            await _productRepository.SaveChangesAsync();
+            var ent = _productRepository.All().ToList();
         }
 
         public async Task<IEnumerable<ProductListingModel>> All(string category, Expression<Func<Product, object>> orderPredicate, OrderType orderType)
@@ -114,7 +119,8 @@
             dbProduct.Image = image;
             dbProduct.ModifiedOn = DateTime.UtcNow;
 
-            await _productRepository.UpdateAsync(dbProduct);
+            _productRepository.Add(dbProduct);
+            await _productRepository.SaveChangesAsync();
         }
 
         public async Task<(string category, CategoryType categoryType)> GetCategory(int productId)
@@ -158,7 +164,8 @@
 
             product.IsDeleted = true;
             product.DeletedOn = DateTime.UtcNow;
-            await _productRepository.UpdateAsync(product);
+            _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync();
         }
 
         private async Task<Product> RetrieveProductOrThrow(int productId)

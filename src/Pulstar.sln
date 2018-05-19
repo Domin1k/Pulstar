@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulstar.Services.Interfaces
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulstar.Web", "Pulstar.Web\Pulstar.Web.csproj", "{0D775DD7-C3D0-4E51-A098-D29F56A7BA58}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulstar.Models", "Pulstar.Models\Pulstar.Models.csproj", "{79AE74E5-03D1-49F1-BDE4-D6451C2BFE1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulstar.Services.Models", "Pulstar.Services.Models\Pulstar.Services.Models.csproj", "{79AE74E5-03D1-49F1-BDE4-D6451C2BFE1B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulstar.Common.Interfaces", "Pulstar.Common.Interfaces\Pulstar.Common.Interfaces.csproj", "{33523B61-6B79-4C5F-8A4D-909D4D9DBD52}"
 EndProject

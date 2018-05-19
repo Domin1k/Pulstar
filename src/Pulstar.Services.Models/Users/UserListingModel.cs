@@ -1,4 +1,4 @@
-﻿namespace Pulstar.Models.Users
+﻿namespace Pulstar.Services.Models.Users
 {
     using Pulstar.Common.Interfaces;
     using Pulstar.DataModels;

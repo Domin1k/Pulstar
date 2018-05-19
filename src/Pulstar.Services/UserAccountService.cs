@@ -16,7 +16,7 @@
             _usersRepository = usersRepostory;
         }
 
-        public async Task Deposit(User user, decimal funds)
+        public async Task DepositAsync(User user, decimal funds)
         {
             decimal balanceBefore = balanceBefore = user.AccountBalance;
             try
@@ -35,12 +35,14 @@
                 throw;
             }
 
-            await _usersRepository.UpdateAsync(user);
+            _usersRepository.Update(user);
+
+            await _usersRepository.SaveChangesAsync();
         }
 
         public bool HasEnoughFunds(User user, decimal funds) => (user.AccountBalance - funds) > 0m;
 
-        public async Task Withdraw(User user, decimal funds)
+        public async Task WithdrawAsync(User user, decimal funds)
         {
             decimal balanceBefore = user.AccountBalance;
             try
@@ -59,7 +61,8 @@
                 throw;
             }
 
-            await _usersRepository.UpdateAsync(user);
+            _usersRepository.Update(user);
+            await _usersRepository.SaveChangesAsync();
         }
 
         private void DoRollback(User user, decimal amountBefore)

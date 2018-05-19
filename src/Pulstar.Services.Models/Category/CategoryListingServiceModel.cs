@@ -1,4 +1,4 @@
-﻿namespace Pulstar.Models.Category
+﻿namespace Pulstar.Services.Models.Category
 {
     using Pulstar.Common.Interfaces;
     using Pulstar.DataModels;

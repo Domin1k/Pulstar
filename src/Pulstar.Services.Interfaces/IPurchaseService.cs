@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Pulstar.Models.Purchase;
+    using Pulstar.Services.Models.Purchase;
 
     public interface IPurchaseService
     {

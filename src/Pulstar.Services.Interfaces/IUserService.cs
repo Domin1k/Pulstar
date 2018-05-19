@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Pulstar.Common.Constants;
-    using Pulstar.Models.Users;
+    using Pulstar.Services.Models.Users;
 
     public interface IUserService
     {

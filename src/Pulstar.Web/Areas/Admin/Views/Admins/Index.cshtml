@@ -24,7 +24,9 @@
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
                 <td>
-                    <select class="roles-selectList" id="@user.UserName" asp-items="@user.Roles" selected="selected"></select>
+                    <select class="roles-selectList" id="@user.UserName" asp-items="@user.Roles"  selected="selected">
+                        <option>Choose role</option>
+                    </select>
                 </td>
                 <td>
                     @Html.Partial("_AddToRole", new AddToRoleViewModel { UserName = user.UserName, Role = user.Role })

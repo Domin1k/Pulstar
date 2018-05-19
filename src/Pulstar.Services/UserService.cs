@@ -12,8 +12,8 @@
     using Pulstar.Common.Helpers;
     using Pulstar.Data.Interfaces;
     using Pulstar.DataModels;
-    using Pulstar.Models.Users;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Services.Models.Users;
 
     public class UserService : IUserService
     {
@@ -43,7 +43,7 @@
             {
                 throw new InvalidOperationException(string.Format(ServiceErrorsConstants.InvalidUserInput, nameof(creditCardNumber), nameof(cvv), nameof(expirationDate)));
             }
-            
+
             var creditCardType = CreditCardHelper.GetCreditCardType(creditCardNumber);
 
             var user = await RetrieveUser(userName);
@@ -64,6 +64,8 @@
                 OwnerId = user.Id,
             };
             user.CreditCards.Add(creditCard);
+            _usersRepository.Update(user);
+            await _usersRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<UserListingModel>> All(int takeCount = AppConstants.DefaultTakeCount)
@@ -89,10 +91,10 @@
             var result = await _userManager.AddToRoleAsync(user, roleName);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.AddToRoleFailed, roleName, userName));
+                throw new InvalidOperationException(string.Format(ServiceErrorsConstants.AddToRoleFailed, roleName, userName, string.Join(",", result.Errors.Select(e => e.Description))));
             }
         }
-        
+
         public async Task DepositFunds(string userName, decimal amountToDeposit, IUserAccountService userAccountService)
         {
             if (amountToDeposit <= 0)
@@ -107,8 +109,9 @@
                 throw new InvalidOperationException(string.Format(ServiceErrorsConstants.UserDoesNotHaveAnyPaymentMethods, user.UserName));
             }
 
-            userAccountService.Deposit(user, amountToDeposit);
-            await _usersRepository.UpdateAsync(user);
+            await userAccountService.DepositAsync(user, amountToDeposit);
+            _usersRepository.Update(user);
+            await _usersRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<UserPaymentMethodsModel>> PaymentMethods(string userName)

@@ -11,9 +11,9 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Pulstar.Common.Helpers;
     using Pulstar.DataModels;
-    using Pulstar.Models.Products;
-    using Pulstar.Models.Purchase;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Services.Models.Products;
+    using Pulstar.Services.Models.Purchase;
     using Pulstar.Web.Infrastructure.Constants;
     using Pulstar.Web.Models.UsersViewModels;
 

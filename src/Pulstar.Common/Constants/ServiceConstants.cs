@@ -17,7 +17,7 @@
         public const string InvalidFunds = "Funds must be equal or greater than zero.";
         public const string UserDoesNotHaveAnyPaymentMethods = "{0} does not have any payment methods available. Please add payment method and try again.";
         public const string InvalidDeposit = "{0} cannot be less or equal to 0.";
-        public const string AddToRoleFailed = "Add to {0} for {1} failed.";
+        public const string AddToRoleFailed = "Add to {0} for {1} failed. Reason: {2}";
         public const string UserNameOrRoleNotExists = "{0}/{1} does not exists!";
         public const string InvalidUserCC = "User already has this CC added.";
         public const string InvalidUserInput = "Invalid user input! {0} must be a valid CC number, {1} must be valid CVV and {2} must NOT be past date.";

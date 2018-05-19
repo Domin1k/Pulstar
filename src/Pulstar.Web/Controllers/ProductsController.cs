@@ -9,8 +9,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Pulstar.Common.Enums;
     using Pulstar.DataModels;
-    using Pulstar.Models.Products;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Services.Models.Products;
     using Pulstar.Web.Infrastructure.Constants;
     using Pulstar.Web.Infrastructure.Extensions;
     using Pulstar.Web.Models.ProductsViewModels;

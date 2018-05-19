@@ -11,23 +11,15 @@
         where T : class, IEntity
     {
         private readonly PulstarDbContext _dbContext;
+        private readonly DbSet<T> _dbSet;
         private bool _disposed;
 
         public GenericRepository(PulstarDbContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _dbSet = _dbContext.Set<T>();
         }
-
-        public async Task<T> AddAsync(T entity)
-        {
-            entity.CreatedOn = DateTime.UtcNow;
-
-            await _dbContext.Set<T>().AddAsync(entity);
-            var savedEntries = await _dbContext.SaveChangesAsync();
-
-            return entity;
-        }
-
+        
         public IQueryable<T> All()
         {
             return GetWithNavigationProperties().Where(m => !m.IsDeleted);
@@ -37,48 +29,53 @@
         {
             return GetWithNavigationProperties();
         }
-
-        public async Task DeleteAsync(object id)
-        {
-            var entity = await GetByIdAsync(id);
-            entity.IsDeleted = true;
-            entity.DeletedOn = DateTime.UtcNow;
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(T entity)
-        {
-            entity.IsDeleted = true;
-            entity.DeletedOn = DateTime.UtcNow;
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task HardDeleteAsync(T entity)
-        {
-            _dbContext.Set<T>().Remove(entity);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task HardDeleteAsync(object id)
-        {
-            var entity = await GetByIdAsync(id);
-            _dbContext.Set<T>().Remove(entity);
-            await _dbContext.SaveChangesAsync();
-        }
-
+        
         public async Task<T> GetByIdAsync(object id)
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }
-
-        public async Task<T> UpdateAsync(T entity)
+        
+        public virtual void Add(T entity)
         {
-            entity.ModifiedOn = DateTime.UtcNow;
-            _dbContext.Set<T>().Update(entity);
-            await _dbContext.SaveChangesAsync();
-
-            return entity;
+            _dbContext.Entry(entity).State = EntityState.Added;
+            _dbContext.Add(entity);
         }
+
+        public virtual void Update(T entity)
+        {
+            var entry = _dbContext.Entry(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                _dbSet.Attach(entity);
+            }
+
+            entry.State = EntityState.Modified;
+        }
+
+        public virtual void Delete(T entity)
+        {
+            entity.IsDeleted = true;
+            entity.DeletedOn = DateTime.UtcNow;
+            var entry = _dbContext.Entry(entity);
+            entry.State = EntityState.Modified;
+        }
+
+        public virtual async Task DeleteAsync(object id)
+        {
+            var entity = await GetByIdAsync(id);
+            entity.IsDeleted = true;
+            entity.DeletedOn = DateTime.UtcNow;
+            Update(entity);
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            var result = await _dbContext.SaveChangesAsync();
+            return result;
+        }
+                
+        public void HardDelete(T entity)
+            => _dbSet.Remove(entity);
 
         public void Dispose()
         {

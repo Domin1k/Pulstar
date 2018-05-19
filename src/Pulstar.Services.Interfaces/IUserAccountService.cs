@@ -7,8 +7,8 @@
     {
         bool HasEnoughFunds(User user, decimal funds);
 
-        Task Withdraw(User user, decimal funds);
+        Task WithdrawAsync(User user, decimal funds);
 
-        Task Deposit(User user, decimal funds);
+        Task DepositAsync(User user, decimal funds);
     }
 }

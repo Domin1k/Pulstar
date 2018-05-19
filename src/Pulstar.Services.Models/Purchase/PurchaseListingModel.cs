@@ -1,4 +1,4 @@
-﻿namespace Pulstar.Models.Purchase
+﻿namespace Pulstar.Services.Models.Purchase
 {
     using System;
     using System.Collections.Generic;

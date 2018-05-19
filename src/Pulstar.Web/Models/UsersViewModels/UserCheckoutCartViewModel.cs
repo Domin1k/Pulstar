@@ -4,7 +4,7 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Pulstar.Models.Products;
+    using Pulstar.Services.Models.Products;
 
     public class UserCheckoutCartViewModel
     {

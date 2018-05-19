@@ -10,19 +10,17 @@
         IQueryable<TEntity> All();
 
         IQueryable<TEntity> AllWithDeleted();
-
+        
         Task<TEntity> GetByIdAsync(object id);
 
-        Task<TEntity> AddAsync(TEntity entity);
+        void Add(TEntity entity);
 
-        Task<TEntity> UpdateAsync(TEntity entity);
+        void Update(TEntity entity);
 
         Task DeleteAsync(object id);
+        
+        void HardDelete(TEntity entity);
 
-        Task DeleteAsync(TEntity entity);
-
-        Task HardDeleteAsync(object id);
-
-        Task HardDeleteAsync(TEntity entity);
+        Task<int> SaveChangesAsync();
     }
 }

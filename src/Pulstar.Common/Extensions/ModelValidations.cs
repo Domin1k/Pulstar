@@ -1,7 +1,6 @@
 ﻿namespace Pulstar.Common.Extensions
 {
     using System;
-    using System.Linq;
     using System.Reflection;
 
     public static class ModelValidations

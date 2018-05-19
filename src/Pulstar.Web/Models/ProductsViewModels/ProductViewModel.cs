@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using Pulstar.Common.Interfaces;
-    using Pulstar.Models.Products;
+    using Pulstar.Services.Models.Products;
 
     public class ProductViewModel : IMapFrom<ProductDetailsModel>
     {

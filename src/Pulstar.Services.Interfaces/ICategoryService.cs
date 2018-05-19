@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Pulstar.Common.Enums;
-    using Pulstar.Models.Category;
+    using Pulstar.Services.Models.Category;
 
     public interface ICategoryService
     {

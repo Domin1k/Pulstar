@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pulstar.Models\Pulstar.Models.csproj" />
+    <ProjectReference Include="..\Pulstar.Services.Models\Pulstar.Services.Models.csproj" />
     <ProjectReference Include="..\Pulstar.DataModels\Pulstar.DataModels.csproj" />
   </ItemGroup>
 

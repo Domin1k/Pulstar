@@ -23,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Pulstar.DataModels\Pulstar.DataModels.csproj" />
     <ProjectReference Include="..\Pulstar.Data\Pulstar.Data.csproj" />
-    <ProjectReference Include="..\Pulstar.Models\Pulstar.Models.csproj" />
+    <ProjectReference Include="..\Pulstar.Services.Models\Pulstar.Services.Models.csproj" />
     <ProjectReference Include="..\Pulstar.Services.Interfaces\Pulstar.Services.Interfaces.csproj" />
   </ItemGroup>
 

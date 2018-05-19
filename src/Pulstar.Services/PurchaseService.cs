@@ -11,8 +11,8 @@
     using Pulstar.Data.Extensions;
     using Pulstar.Data.Interfaces;
     using Pulstar.DataModels;
-    using Pulstar.Models.Purchase;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Services.Models.Purchase;
 
     public class PurchaseService : IPurchaseService
     {
@@ -77,17 +77,18 @@
                 Date = DateTime.UtcNow,
             };
 
-            await _purchasesRepository.AddAsync(purchase);
+            _purchasesRepository.Add(purchase);
             
             if (!_userAccountService.HasEnoughFunds(user, purchaseAmount))
             {
                 throw new InvalidOperationException(string.Format(ServiceErrorsConstants.UserInsufficientFunds, userName));
             }
 
-            await _userAccountService.Withdraw(user, purchaseAmount);
+            await _userAccountService.WithdrawAsync(user, purchaseAmount);
 
             purchase.SetUniquePurchaseCode();
-            await _purchasesRepository.UpdateAsync(purchase);
+            _purchasesRepository.Update(purchase);
+            await _purchasesRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<PurchaseListingModel>> Products(string userName)

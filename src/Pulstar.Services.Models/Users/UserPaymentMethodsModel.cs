@@ -1,4 +1,4 @@
-﻿namespace Pulstar.Models.Users
+﻿namespace Pulstar.Services.Models.Users
 {
     using System;
     using AutoMapper;

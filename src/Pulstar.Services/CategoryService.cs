@@ -11,8 +11,8 @@
     using Pulstar.Common.Extensions;
     using Pulstar.Data.Interfaces;
     using Pulstar.DataModels;
-    using Pulstar.Models.Category;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Services.Models.Category;
 
     public class CategoryService : ICategoryService
     {
@@ -38,7 +38,8 @@
                 Type = catType,
             };
 
-            await _categoriesRepository.AddAsync(category);
+            _categoriesRepository.Add(category);
+            await _categoriesRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<CategoryListingServiceModel>> All(string type)
@@ -55,10 +56,10 @@
         public async Task DeleteCategory(string name)
         {
             var cat = await RetrieveOrThrow(name);
+            
+            await _categoriesRepository.DeleteAsync(cat.Id);
 
-            cat.IsDeleted = true;
-            cat.DeletedOn = DateTime.UtcNow;
-            await _categoriesRepository.UpdateAsync(cat);
+            await _categoriesRepository.SaveChangesAsync();
         }
 
         public Task<CategoryDetailsModel> Details(string categoryName)

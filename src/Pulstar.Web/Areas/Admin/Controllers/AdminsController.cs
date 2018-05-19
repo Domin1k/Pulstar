@@ -11,8 +11,8 @@
     using Microsoft.EntityFrameworkCore;
     using Pulstar.Common.Constants;
     using Pulstar.Common.Enums;
-    using Pulstar.Models.Products;
     using Pulstar.Services.Interfaces;
+    using Pulstar.Services.Models.Products;
     using Pulstar.Web.Areas.Admin.Models.Categories;
     using Pulstar.Web.Areas.Admin.Models.Users;
     using Pulstar.Web.Extensions;
@@ -62,7 +62,8 @@
 
         [HttpGet]
         [Authorize(Roles = AppConstants.Administrator)]
-        public IActionResult ManageCategory(string id) => View("ManageCategory", id);
+        public IActionResult ManageCategory(string id) 
+            => View("ManageCategory", id);
 
         [Authorize(Roles = AppConstants.Administrator)]
         [HttpGet]

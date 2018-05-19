@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Pulstar.Common.Enums;
     using Pulstar.DataModels;
-    using Pulstar.Models.Products;
+    using Pulstar.Services.Models.Products;
 
     public interface IProductService
     {
